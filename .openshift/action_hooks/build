@@ -1,0 +1,19 @@
+#!/bin/bash
+# Pyramid OpenShift post-deploy pre-start configuration
+
+export PYTHON=python-2.7
+export PATH=$PATH:~/$PYTHON/virtenv/bin/
+export PYTHON_EGG_CACHE=~/$PYTHON/virtenv/lib/python2.7/site-packages
+
+APP=corniceapp
+
+source ~/$PYTHON/virtenv/bin/activate
+
+# Have apache serve up all of our static resources
+echo "Symlinking static resources from $APP/public"
+ln -s $OPENSHIFT_REPO_DIR/wsgi/$APP/$APP/static/* $OPENSHIFT_REPO_DIR/wsgi/static/
+
+cd $OPENSHIFT_REPO_DIR/wsgi/$APP
+
+# We're not doing 'install' to save space.
+python setup.py develop
