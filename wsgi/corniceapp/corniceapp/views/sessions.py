@@ -1,7 +1,7 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, Repo, DBSession
+from corniceapp.models import User, DBSession, APIKey
 from corniceapp.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
@@ -11,9 +11,29 @@ from pyramid.security import (
 from webob import Response
 import hashlib
 import json
+import uuid
 
 
 login = Service(name='users', path='/users/login', description='User login endpoints')
+
+
+def get_logged_in_user(request):
+    """
+        Return the user authenticated in this request
+    """
+    email = authenticated_userid(request)
+    return DBSession.query(User).filter(email=email).one()
+
+
+def gen_apikey():
+    """
+        Generate a unique api key
+    """
+    for _ in range(10):
+        newkey = str(uuid.uuid5()).replace('-', '')
+        if DBSession.query(APIKey).filter(apikey=newkey).count() == 0:
+            return newkey
+    raise Exception("can't make a unique key... wat")
 
 
 @login.post(validators=validate_generic)
@@ -55,8 +75,18 @@ def create_key(request):
     """
         Create a new api key for a user
         privs: logged in, admin
+        {"username": "dat-user"}
     """
-    pass
+    cur_user = get_logged_in_user(request)
+    if cur_user:
+        target_user = DBSession.query(User).filter(
+            name=request.validated['username']).one()
+        if target_user.name == cur_user or cur_user.admin:
+            key = gen_apikey()
+            newAPIKey = APIKey(apikey=key,ownerid=target_user.id)
+            DBSession.add(newAPIKey)
+            return {"success": True}
+    return {"success": False}
 
 
 @apikeys.delete(validators=validate_generic)
@@ -64,5 +94,16 @@ def delete_key(request):
     """
         Delete an api key
         privs: logged in, admin
+        {"username": "user", "key": "dat-key"}
     """
-    pass
+    cur_user = get_logged_in_user(request)
+    if cur_user:
+        target_user = DBSession.query(User).filter(
+            name=request.validated['username']).one()
+        if target_user == cur_user or cur_user.admin:
+            key = DBSession.query(APIKey).filter(
+                apikey=request.validated['key']).one()
+            DBSession.delete(key)
+            return {"success": True}
+    return {"success": False}
+

@@ -30,9 +30,9 @@
 			</div>	
 		</script>
 		<script type="text/x-handlebars" data-template-name="signup">
-			<div class="span6">
+			<div class="offset1 span5">
 				<h2>New User</h2>
-				<form class="login-form" id="signup-form" {{action signUp on="submit"}}>
+				<form class="login-form" id="signup-form" {{action postUser on="submit"}}>
 					<div class="control-group" id="username-control">
 						<div class="controls">
 							<input type="text" class="login-field" name="username" id="username" placeholder="Username" autofocus pattern="^\w+$">
@@ -60,7 +60,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="span6">
+			<div class="span5">
 				<h2>Returning User</h2>
 				<form class="login-form" id="login-form" {{action login on="submit"}}>
 					<div class="control-group" id="login-control">
