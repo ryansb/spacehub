@@ -1,6 +1,7 @@
 import sys
 import os
 import os.path
+import sh
 from sh import cp
 from corniceapp.models import DBSession, Repo, TrackedLink
 from sqlalchemy import create_engine
@@ -30,7 +31,7 @@ def sync_tarballs():
         except:
             pass
         extracted_dir = link.retrieve()
-        cp("-r {0} {1}".format(os.path.join(extracted_dir, "*"), repo.dirname))
+        cp('-R', sh.glob('{0}/*'.format(extracted_dir)), repo.dirname)
         repo.commit_a("Automated tarball sync: {0}".format(link.modified.strftime("%D %H:%M")))
         print("Synced {0} -> {1}".format(link.name, repo.name))
 
