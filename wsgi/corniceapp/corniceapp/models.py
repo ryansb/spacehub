@@ -26,6 +26,16 @@ class User(_Base):
     repos = relationship("Repo")
     apikeys = relationship("APIKey")
 
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            email=self.email,
+            admin=self.admin,
+            created_at=self.created_at.strftime("%D %H:%M"),
+            repos=[r.to_dict() for r in self.repos],
+            apikey=[a.to_dict() for a in self.apikeys])
+
 
 class APIKey(_Base):
     __tablename__ = "apikeys"
@@ -34,6 +44,13 @@ class APIKey(_Base):
     create_at = Column(DateTime())
     apikey = Column(Unicode(255))
     owner_id = Column(Integer, ForeignKey('users.id'))
+
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            create_at=self.create_at,
+            apikey=self.apikey,
+            owner_id=self.owner_id)
 
 
 class Repo(_Base):
