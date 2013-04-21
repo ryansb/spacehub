@@ -98,19 +98,20 @@ def post_repo(request):
         data = dict(request.json)
         data.update({'owner_id': cur_user.id})
         r = Repo.from_dict(data)
-        DBSession.add(r)
-        DBSession.commit()
-        if data['source_type'] == 'tar':
-            t = TrackedLink.from_dict({
-                "repoid": r.id,
-                "name": r.name,
-                "link_text": data.get('link_text'),
-                "url": r.source_url,
-            })
-            t.repo = r
-            DBSession.add(t)
+        if not DBSession.query(Repo).filter(Repo.name==r.name).count() > 1:
+            DBSession.add(r)
             DBSession.commit()
-        return r.to_dict()
+            if data['source_type'] == 'tar':
+                t = TrackedLink.from_dict({
+                    "repoid": r.id,
+                    "name": r.name,
+                    "link_text": data.get('link_text'),
+                    "url": r.source_url,
+                })
+                t.repo = r
+                DBSession.add(t)
+                DBSession.commit()
+            return r.to_dict()
     raise _401()
 
 
