@@ -29,7 +29,10 @@ def put_repo(request):
         To edit an existing repository
     """
     print request.matchdict['rid']
-    pass
+    print request.matchdict['rid']
+    r = DBSession.query(Repo).filter(Repo.id==1).first()
+    r.commit_a(request.json.get("message"))
+    return "yupyup"
 
 @repo_param.get()
 def put_repo(request):
@@ -39,7 +42,7 @@ def put_repo(request):
     print request.matchdict['rid']
     r = DBSession.query(Repo).filter(Repo.id==1).first()
     r.clone()
-    pass
+    return "lololol"
 
 
 @repo.post()
