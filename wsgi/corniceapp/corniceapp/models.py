@@ -5,6 +5,7 @@ from datetime import datetime
 from shlex import split
 import subprocess
 import git
+import os.path
 
 
 _Base = declarative_base()
@@ -86,10 +87,9 @@ class Repo(_Base):
         return True
 
     def commit_a(self, message):
-        try:
-            r = git.Repo(self.dirname)
-        except:
+        if not os.path.exists(self.dirname):
             self.clone()
+        r = git.Repo(self.dirname)
         r.git.add(self.dirname)
         r.git.commit('-am "%s"' % message)
         return True
