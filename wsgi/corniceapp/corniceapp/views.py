@@ -7,13 +7,22 @@ from corniceapp.models import User, Repo
 hello = Service(name='hello', path='/', description="Simplest app")
 
 
-users = Service(name='users', path='/users/{username}', description="User management api")
+users = Service(name='users', path='/users', description="User management api")
 
 
 @users.get()
-def get_user(request):
-    """Get info on user"""
-    pass
+def get_users(request):
+    """Get all users"""
+    users = User.all()
+    scrubbed_users = []
+    for user in users:
+        scrubbed = {
+            "username": user.username,
+            "repos": user.repos
+        }
+        scrubbed_users.append(scrubbed)
+    return scrubbed_users
+
 
 
 @users.post()
