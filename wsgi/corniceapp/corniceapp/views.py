@@ -60,7 +60,7 @@ def get_users(request):
             "repos": user.repos
         }
         scrubbed_users.append(scrubbed)
-    return scrubbed_users
+    return {"users": scrubbed_users}
 
 
 
@@ -144,4 +144,7 @@ def post_repo(request):
     """
         To create a new repository
     """
-    pass
+    r = Repo.from_dict(request.json)
+    DBSession.add(r)
+    DBSession.commit()
+    return r.to_dict()

@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
+from datetime import datetime
 
 
 _Base = declarative_base()
@@ -46,12 +47,24 @@ class Repo(_Base):
         return dict(
             owner_id=self.owner_id,
             name=self.name,
-            created_at=self.created_at,
-            last_updated=self.last_updated,
+            created_at=self.created_at.strftime("%D %H:%M"),
+            last_updated=self.last_updated.strftime("%D %H:%M"),
             source_url=self.source_url,
             github_url=self.github_url,
             path=self.path
         )
+
+    @classmethod
+    def from_dict(cls, new):
+        r = Repo()
+        r.owner_id = new.get('owner_id')
+        r.name = new.get('name')
+        r.created_at = datetime.now()
+        r.last_updated = datetime.now()
+        r.source_url = new.get('source_url')
+        r.github_url = new.get('github_url')
+        r.path = new.get('pat')
+        return r
 
 
 def initialize_sql(engine):
