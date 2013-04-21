@@ -52,4 +52,5 @@ class Repo(_Base):
 def initialize_sql(engine):
     DBSession.configure(bind=engine)
     _Base.metadata.bind = engine
+    _Base.metadata.drop_all()
     _Base.metadata.create_all(engine, checkfirst=False)
