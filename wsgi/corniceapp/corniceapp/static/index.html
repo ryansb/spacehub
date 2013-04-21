@@ -86,7 +86,7 @@
 			</div>
 			<div class="row">
 				<div class="sidebar span2">
-					<button type="button" class="btn btn-large btn-block btn-primary">Add Project</button>
+					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Add Project</button>{{/linkTo}}
 				</div>
 				<div class="span10">
 					<ul class="repo-list">
@@ -106,6 +106,53 @@
 					</ul>
 				</div>
 			</div>
+		</script>
+		<script type="text/x-handlebars" data-template-name="newRepo">
+			<div class="row">
+				<div class="offset2 span4">
+					<h2>Sync a Project</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sidebar span2">
+					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
+				</div>
+				<div class="span10">
+					<form class="form-horizontal" id="create-repo-form" {{action "postRepo" on="submit"}}>
+						<fieldset>
+							<legend>Sync Project with Github</legend>
+							<div class="control-group">
+							    <label class="control-label" for="box-name">Project Name</label>
+								<div class="controls">
+									<input type="text" class="repo-name" name="name" id="repo-name" placeholder="New Open-Source Project Name" required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-source-url">Project Source URL</label>
+								<div class="controls">
+									<input type="text" class="repo-source-url" name="repo-source-url" id="repo-source-url" placeholder="e.g. http://www.example.org/dev/projects/repo.tar.gz" required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-github-user">Destination Github User</label>
+								<div class="controls">
+									<input type="text" class="repo-github-user" name="repo-github-user" id="repo-github-user" placeholder="e.g. nasa" required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-github-name">Destination Github Repository</label>
+								<div class="controls">
+									<input type="text" class="repo-github-name" name="repo-github-name" id="repo-github-name" placeholder="e.g. open-source-project" required>
+								</div>
+							</div>
+						</fieldset>
+						<div class="control-group">
+							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-primary">Sync Project with Github</button>
+						</div>
+					</form>
+
+				</div>
+			</div>			
 		</script>
 		<script src="js/libs/jquery-1.9.1.js"></script>
 		<script src="js/jquery-ui-1.10.0.custom.min.js"></script>

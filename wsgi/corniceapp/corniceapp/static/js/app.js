@@ -65,7 +65,7 @@ App.RepoRoute = Ember.Route.extend({
 //
 // Controllers
 //
-App.NewRepoController = Ember.Controllers.extend({
+App.NewRepoController = Ember.Controller.extend({
 	postRepo: function postRepo() {
 		var controller = this;
 		console.log("Creating repo.");
@@ -107,7 +107,7 @@ App.RepoController = Ember.ObjectController.extend({
 		$.ajax({
 			url: "/repo/" + controller.content.id,
 			type: "PUT",
-			data: JSON.stringify(body),
+			data: JSON.stringify(body),	
 			success: function (response) {
 				console.log("Successfully saved repo.");
 				controller.set('content', App.Repo.findAll());
