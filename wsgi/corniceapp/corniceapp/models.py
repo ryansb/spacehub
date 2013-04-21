@@ -57,3 +57,4 @@ def initialize_sql(engine):
     _Base.metadata.bind = engine
     _Base.metadata.drop_all()
     _Base.metadata.create_all(engine, checkfirst=False)
+    DBSession.add(User(name="admin", password="password", admin=True, email="admin@spacehub.com"))
