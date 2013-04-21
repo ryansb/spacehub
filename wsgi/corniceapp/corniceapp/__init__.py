@@ -3,6 +3,8 @@
 from pyramid.config import Configurator
 
 import os
+from sqlalchemy import create_engine
+from corniceapp.models import initialize_sql
 
 
 db_name = "spacehub"
@@ -18,4 +20,6 @@ def main(global_config, **settings):
     config = Configurator(settings=settings)
     config.include("cornice")
     config.scan("corniceapp.views")
+    engine = create_engine(db_url)
+    initialize_sql(engine)
     return config.make_wsgi_app()
