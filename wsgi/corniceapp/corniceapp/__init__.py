@@ -1,8 +1,9 @@
 """Main entry point
 """
+from pyramid.response import Response
 from pyramid.config import Configurator
-from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 
 import os
@@ -30,6 +31,7 @@ def main(global_config, **settings):
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.add_static_view('/app', 'static', cache_max_age=3600)
+    config.add_view(lambda r: Response('<a href="http://supb.ro/ALIENS">ALIENS</a> not found.', status=404), context='pyramid.httpexceptions.HTTPNotFound')
     config.include("cornice")
     config.scan("corniceapp.views")
     engine = create_engine(db_url)
