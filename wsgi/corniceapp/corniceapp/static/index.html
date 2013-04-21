@@ -43,7 +43,7 @@
 			    </a>
 			  </p>
 			</div>
-			<div class="row">
+			<div class="row-fluid">
 				<div class="span3 well">
 					<h2>A Callout Box</h2>
 					<p>Got some text and stuff.</p>
@@ -113,7 +113,7 @@
 			</div>
 		</script>
 		<script type="text/x-handlebars" data-template-name="repos">
-			<div class="row">
+			<div class="row-fluid">
 				<div class="sidebar span2">
 					<h3>Tools</h3>
 					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
@@ -124,7 +124,7 @@
 							{{#each repo in controller}}
 								<li class="repo inline-block">
 								{{#linkTo repo repo}}
-									<div class="row">
+									<div class="row-fluid">
 										<div class="span6">
 											<div class="repo-icon fui-settings-24"></div>
 											<h4 class="repo-name inline">{{repo.name}}</h4>
@@ -141,12 +141,12 @@
 			</div>
 		</script>
 		<script type="text/x-handlebars" data-template-name="newRepo">
-			<div class="row">
+			<div class="row-fluid">
 				<div class="offset2 span4">
 					<h2>Sync a Project</h2>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row-fluid">
 				<div class="sidebar span2">
 					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
 				</div>
@@ -208,12 +208,12 @@
 			</div>			
 		</script>
 		<script type="text/x-handlebars" data-template-name="repo">
-			<div class="row">
+			<div class="row-fluid">
 				<div class="offset2 span4">
 					<h2>Sync a Project</h2>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row-fluid">
 				<div class="sidebar span2">
 					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
 				</div>
