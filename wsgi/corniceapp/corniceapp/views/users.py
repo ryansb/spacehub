@@ -21,6 +21,7 @@ def get_users(request):
     for user in users:
         scrubbed = {
             "username": user.name,
+            "id": user.id,
             "repos": [r.to_dict() for r in user.repos],
             "apikeys": [a.apikey for a in user.apikeys],
         }
