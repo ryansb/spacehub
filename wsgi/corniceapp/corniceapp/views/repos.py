@@ -1,5 +1,22 @@
-""" Cornice services.
 """
+   SpaceHub
+   Copyright (C) 2013 Ryan Brown <sb@ryansb.com>, Sam Lucidi <mansam@csh.rit.edu>,
+   Ross Delinger <rossdylan@csh.rit.edu>, Greg Jurman <jurman.greg@gmail.com>
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
 from cornice import Service
 from corniceapp.models import Repo, DBSession
 from corniceapp.validators import valid_user
@@ -24,10 +41,26 @@ def commit_repo(request):
     if cur_user:
         print request.matchdict['rid']
         print request.matchdict['rid']
-        r = DBSession.query(Repo).filter(Repo.id==1).first()
+        r = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid']).first()
         if r.owner_id == cur_user.id or cur_user.admin:
             r.commit_a(request.json.get("message"))
-            return "yupyup"
+            return {"success": True}
+    raise _401()
+
+
+@repo_act.post(validators=valid_user)
+def push_repo(request):
+    """
+        Push changes to this repo to a remote
+    """
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        repos = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid'])
+        if repos.count() > 0:
+            repo = repos.first()
+            if repo.owner_id == cur_user.id or cur_user.admin:
+                repo.push()
+                return {"success": True}
     raise _401()
 
 
@@ -42,13 +75,15 @@ def clone_repo(request):
         r = DBSession.query(Repo).filter(Repo.id==1).first()
         if r.owner_id == cur_user.id or cur_user.admin:
             r.clone()
-            return "lololol"
+            return {"success": True}
     raise _401()
 
 
-@repo.get()
+@repo.get(validators=valid_user)
 def get_repos(request):
-    return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        return {"repos": [r.to_dict() for r in DBSession.query(Repo).filter(Repo.owner_id==cur_user.id).all()]}
 
 
 @repo.post(validators=valid_user)
