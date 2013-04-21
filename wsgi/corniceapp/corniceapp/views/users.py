@@ -49,6 +49,7 @@ def create_user(request):
     if DBSession.query(User).filter(User.name==new_user.name).count() > 0:
         raise _401()
     DBSession.add(new_user)
+    DBSession.commit()
     return {"success": True}
 
 
@@ -75,6 +76,8 @@ def edit_user(request):
                 if "email" in changes:
                     if not DBSession.query(User).filter(User.email==changes['email']).count() > 1:
                         target_user.email = changes['email']
+                DBSession.add(target_user)
+                DBSession.commit()
     raise _401()
 
 
@@ -93,5 +96,6 @@ def delete_user(request):
             target_user = None
         if target_user and (target_user.name == cur_user.name or cur_user.admin):
             DBSession.delete(target_user)
+            DBSession.commit()
             return {"success": True}
     raise _401()
