@@ -1,7 +1,7 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, DBSession
+from corniceapp.models import User, TrackedLink, DBSession
 from corniceapp.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
@@ -14,13 +14,13 @@ import json
 watch_page = Service(name="watch_page", path="/watch_page",
         description="Service to deal with watching page links for changed files")
 
-@watch_page.get(validators=validate_generic)
+@watch_page.get()
 def get_watched_page(request):
     """
         Get all trackedlinks that spacehub knows of for the user
     """
     current_user = DBSession.query(User).filter(
-        User.email == authenicated_userid(request)).one()
+        User.email == authenticated_userid(request)).one()
 
     filtered_tracks = []
     for repo in current_user.repos:
@@ -28,12 +28,13 @@ def get_watched_page(request):
         if t_link:
             filtered_tracks.append(t_link.to_dict())
 
-    return {"tracked_links": filtered_links}
+    return {"tracked_links": filtered_tracks}
 
 @watch_page.put(validators=validate_generic)
 def put_watched_page(request):
     """
         Edit watched page
+        Can change the link text and name, but not repo or mtime/atime
     """
     pass
 
@@ -41,5 +42,9 @@ def put_watched_page(request):
 def post_watched_page(request):
     """
         Add a new watched page
+        Need check to make sure user owns repo
     """
-    pass
+    tr = TrackedLink.from_dict(request.validated)
+    DBSession.add(tr)
+    DBSession.commit()
+    return tr.to_dict()

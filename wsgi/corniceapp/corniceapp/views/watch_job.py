@@ -1,7 +1,7 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, Repo, DBSession
+from corniceapp.models import ScrapeJob, DBSession
 from corniceapp.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
@@ -20,20 +20,31 @@ watch_runner = Service(name="watch_runner", path="/watch_runner",
 @watch_runner.get()
 def get_watch_runner(request):
     """
-        When GET'd to this, will get info on the running jorb
+        When GET'd to this, will get info on the running jorbs
     """
-    return ScrapeJob.all()
+    jobs = DBSession.query(ScrapeJob).filter(ScrapeJob.status==1)
+    if jobs:
+        return dict(jobs=[j.to_dict() for j in jobs])
+
+    return dict(jobs=[])
 
 @watch_runner.post(validators=validate_generic)
 def post_watch_runner(request):
     """
         When POSTED to this will start operating on watched pages
+        Check to see if there is already a job with status 1 (running)
+        If so return false else create new job and kick off a scrape
     """
     pass
 
-@watch_runner.put()
+@watch_runner.put(validators=validate_generic)
 def put_watch_runner(request):
     """
         Update the runner's status.
     """
-    pass
+    job = DBSession.query(ScrapeJob).filter(
+            ScrapeJob.id==request.validated['id']).one()
+
+    job.status = request.validatated['new_status']
+
+    return job.to_dict()
