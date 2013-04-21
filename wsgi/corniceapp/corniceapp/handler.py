@@ -26,8 +26,10 @@ class HandlerMeta(type):
         match = mcs.meta_handlers.keys()
         _proper_match = None
         _ext = None
-        while len(match) > 0:
+        ext = file_name
+        while ext:
             file_name, ext = os.path.splitext(file_name)
+            ext = ext[1:]
             print "Looking at %s..." % ext
             matches = filter(lambda x: x[:-len(ext)] is ext,
                     mcs.meta_handlers.keys())
@@ -64,6 +66,12 @@ class GZipFileHandler(FileHandlerBase):
     def handle(self, file_name, dest):
         from sh import gunzip
 
+
+class TarFileHandler(FileHandlerBase):
+    file_ext = "tar"
+
+    def handle(self, file_name, dest):
+        from sh import tar
 
 
 def tgz_handle(self, file_name, dest):
