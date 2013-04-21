@@ -3,13 +3,7 @@ from corniceapp.models import DBSession, User, APIKey
 from pyramid.security import authenticated_userid
 
 
-def validate_generic(request):
-    """
-    Generic validator that doesn't really do anything
-    For testing/rapid dev stuff
-    """
-    data = json.loads(request.body)
-    request.validated.update(data)
+def valid_user(request):
 
     email = authenticated_userid(request)
     if email:
@@ -20,4 +14,15 @@ def validate_generic(request):
         if loggedin_user:
             request.validated['ValidUser'] = loggedin_user
             request.validated['isAdmin'] = loggedin_user.admin
+
+
+def validate_generic(request):
+    """
+    Generic validator that doesn't really do anything
+    For testing/rapid dev stuff
+    """
+    data = json.loads(request.body)
+    request.validated.update(data)
+    valid_user(request)
+
 
