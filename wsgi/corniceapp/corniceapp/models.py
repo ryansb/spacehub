@@ -111,6 +111,7 @@ class Repo(_Base):
         self.github_uname = new.get('github_uname', self.github_uname)
         self.github_repo = new.get('github_repo', self.github_repo)
         self.clone_url = new.get('clone_url', self.clone_url)
+        self.source_type = new.get('source_type', self.source_type)
         self.dirname = new.get('dirname', self.dirname)
         return True
 
