@@ -86,7 +86,10 @@ class Repo(_Base):
         return True
 
     def commit_a(self, message):
-        r = git.Repo(self.dirname)
+        try:
+            r = git.Repo(self.dirname)
+        except:
+            self.clone()
         r.git.add(self.dirname)
         r.git.commit('-am "%s"' % message)
         return True
