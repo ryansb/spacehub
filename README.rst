@@ -1,32 +1,26 @@
-Pyramid on Red Hat's OpenShift Express
+SpaceHub
 ======================================
 
-This quickstart helps you get up and running with a Pyramid installation on
-OpenShift. It automatically handles creating a Python virtualenv, populating a
-MySQL database, and deploying your application to the cloud.
+SpaceHub is an open-source scraper for code located on Sourceforge, in SVN, or
+just in a tarball somewhere.
 
-* Create an account at http://openshift.redhat.com/
+Built for the `NASA Space Apps Challenge` http://spaceappschallenge.org to
+centralize NASA open source projects.
 
 Features
 --------
 
-* Completely free, thanks to Red Hat's OpenShift Express
+* Completely free, and runs on OpenShift Express (RedHat++)
 * MySQL database automatically setup for your application
-* Dynamic database configuration at runtime. No passwords stored in your configs.
-* Your application's test suite is run after each push
-* Automatic deployment upon git push
-* No need to think about servers, let alone apache/mod_wsgi configuration
 
-The fastest method
+Get Started
 ------------------
-
-You can easily deploy a pre-configured Pyramid + MySQL application to the
-OpenShift cloud with a single command, using the `openshift-quickstarter` tool:
-http://github.com/lmacken/openshift-quickstarter
-
 ::
 
-    ./openshift-quickstarter EMAIL DOMAIN APPNAME cornice
+    rhc app create spacehub python-2.7
+    rhc cartridge add -a spacehub -c mysql-5.1
+    git remote add shift <OPENSHIFT PUSH URL>
+    git push shift master -f
 
 That's all it takes. You can now view your application at:
 
@@ -34,25 +28,4 @@ That's all it takes. You can now view your application at:
 
     http://APPNAME-DOMAIN.rhcloud.com
 
-Right now, all it'll say is '{"hello": "world"}'
-
-The manual method
------------------
-
-If you don't want to use the `openshift-quickstarter`, you can easily create a new OpenShift WSGI application and merge this quickstart into it manually:
-
-::
-
-    rhc app create -a corniceapp -t python-2.7 -l your@email.com
-    rhc cartridge add -a corniceapp -c mysql-5.1 -l your@email.com
-    cd corniceapp
-    git remote add upstream -m master git://github.com/ryansb/cornice-openshift-quickstart.git
-    git pull -s recursive -X theirs upstream master
-    git push
-
-Monitoring your logs
---------------------
-
-::
-
-    rhc tail corniceapp
+And you're off to the races!

@@ -74,7 +74,7 @@ def get_param_repo(request):
 @repo_param.put()
 def update_repo(request):
     repo = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid']).first()
-    repo.__dict__.update(request.json)
+    repo.updict(request.json)
     DBSession.add(repo)
     DBSession.commit()
     return DBSession.query(Repo).filter(Repo.id==request.matchdict['rid']).first().to_dict()
