@@ -78,7 +78,35 @@
 				</form>
 			</div>
 		</script>
-
+		<script type="text/x-handlebars" data-template-name="repos">
+			<div class="row">
+				<div class="offset2 span4">
+					<h2>Project Dashboard</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sidebar span2">
+					<button type="button" class="btn btn-large btn-block btn-primary">Add Project</button>
+				</div>
+				<div class="span10">
+					<ul class="repo-list">
+						{{#each repo in controller}}
+						<li class="repo inline-block">{{#linkTo repo repo}}
+							<div class="row">
+								<div class="span2">
+									<div class="repo-icon fui-settings-24"></div>
+									<h4 class="repo-name inline">{{box.name}}</h4>
+								</div>
+								<div class="span5">
+								</div>
+							</div>
+							{{/linkTo}}
+						</li>
+						{{/each}}
+					</ul>
+				</div>
+			</div>
+		</script>
 		<script src="js/libs/jquery-1.9.1.js"></script>
 		<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
 		<script src="js/jquery.dropkick-1.0.0.js"></script>
