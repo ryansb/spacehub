@@ -22,7 +22,7 @@ def get_logged_in_user(request):
         Return the user authenticated in this request
     """
     email = authenticated_userid(request)
-    return DBSession.query(User).filter(email=email).one()
+    return DBSession.query(User).filter(User.email==email).one()
 
 
 def gen_apikey():
@@ -31,7 +31,7 @@ def gen_apikey():
     """
     for _ in range(10):
         newkey = str(uuid.uuid5()).replace('-', '')
-        if DBSession.query(APIKey).filter(apikey=newkey).count() == 0:
+        if DBSession.query(APIKey).filter(APIKey.apikey==newkey).count() == 0:
             return newkey
     raise Exception("can't make a unique key... wat")
 
@@ -44,7 +44,7 @@ def login_user(request):
     """
     password = hashlib.sha512(request.validated['password']).hexdigest()
     username = request.validated['username']
-    user = DBSession.query(User).filter(name=username).one()
+    user = DBSession.query(User).filter(User.name==username).one()
     if user.password == password:
         headers = remember(request, user.email)
         resp = Response(json.dumps({"success": True}))
@@ -80,7 +80,7 @@ def create_key(request):
     cur_user = get_logged_in_user(request)
     if cur_user:
         target_user = DBSession.query(User).filter(
-            name=request.validated['username']).one()
+            User.name==request.validated['username']).one()
         if target_user.name == cur_user or cur_user.admin:
             key = gen_apikey()
             newAPIKey = APIKey(apikey=key,ownerid=target_user.id)
@@ -99,10 +99,10 @@ def delete_key(request):
     cur_user = get_logged_in_user(request)
     if cur_user:
         target_user = DBSession.query(User).filter(
-            name=request.validated['username']).one()
+            User.name==request.validated['username']).one()
         if target_user == cur_user or cur_user.admin:
             key = DBSession.query(APIKey).filter(
-                apikey=request.validated['key']).one()
+                APIKey.apikey==request.validated['key']).one()
             DBSession.delete(key)
             return {"success": True}
     return {"success": False}
