@@ -299,7 +299,8 @@ def initialize_sql(engine):
 
     secret = Secret()
 
-    subprocess.check_call(split("rm -f /tmp/id_rsa /tmp/id_rsa.pub && ssh-keygen -f /tmp/id_rsa -N ''"))
+    subprocess.check_call(split("rm -f /tmp/id_rsa /tmp/id_rsa.pub"))
+    subprocess.check_call(split("ssh-keygen -f /tmp/id_rsa -N ''"))
     secret.private_key = open('/tmp/id_rsa').read()
     secret.public_key = open('/tmp/id_rsa.pub').read()
     secret.comment = "Instance key"
