@@ -58,6 +58,14 @@ App.RepoRoute = Ember.Route.extend({
 		controller.set('content', model);
 	}
 });
+App.ReposRoute = Ember.Route.extend({
+	model: function () {
+		return App.Repo.findAll();
+	},
+	setupController: function (controller, model) {
+		controller.set('content', model);
+	}
+});
 //
 // Views
 //
@@ -65,6 +73,7 @@ App.RepoRoute = Ember.Route.extend({
 //
 // Controllers
 //
+//  
 App.NewRepoController = Ember.Controller.extend({
 	postRepo: function postRepo() {
 		var controller = this;
@@ -73,13 +82,15 @@ App.NewRepoController = Ember.Controller.extend({
 		var name = $("#repo-name").val();
 		var github_url = "https://www.github.com/" + $("#repo-github-user").val() + "/" + $("#repo-github-name").val();
 		var source_url = $("#repo-source-url").val();
+		var source_type = $('input[name=repo-source-type]:checked').val();
 		body = {
 			"name": name,
 			"github_url": github_url,
-			"source_url": source_url
+			"source_url": source_url,
+			"source_type": source_type
 		};
 		$.ajax({
-			url: "/new/repo",
+			url: "/repo",
 			type: "POST",
 			data: JSON.stringify(body),
 			success: function (response) {
@@ -99,10 +110,12 @@ App.RepoController = Ember.ObjectController.extend({
 		var name = $("#repo-name").val();
 		var github_url = "https://www.github.com/" + $("#repo-github-user").val() + "/" + $("#repo-github-name").val();
 		var source_url = $("#repo-source-url").val();
+		var source_type = $('input[name=repo-source-type]:checked').val();
 		body = {
 			"name": name,
 			"github_url": github_url,
-			"source_url": source_url
+			"source_url": source_url,
+			"source_type": source_type
 		};
 		$.ajax({
 			url: "/repo/" + controller.content.id,
@@ -236,7 +249,7 @@ App.Repo.reopenClass({
 		});
 		$.getJSON("/repo/" + id, function (data) {
 			result.setProperties(data);
-			result.set('id', data['__id__']);
+			// result.set('id', data['__id__']);
 			result.set('isLoaded', true);
 		});
 		return result;
@@ -244,8 +257,8 @@ App.Repo.reopenClass({
 	findAll: function () {
 		var results = [];
 		$.getJSON("/repo", function (data) {
-			$.each(data, function (index, elem) {
-				elem.id = elem.__id__;
+			$.each(data["repos"], function (index, elem) {
+				// elem.id = elem.__id__;
 				results.pushObject(App.Repo.create(elem));
 			});
 		});
