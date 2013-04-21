@@ -8,7 +8,6 @@ _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
 
 from os.path import expanduser
-from sh import at, git
 import subprocess
 repo_path = expanduser('~/repos')
 

@@ -31,6 +31,14 @@ def put_repo(request):
     print request.matchdict['rid']
     pass
 
+@repo_param.get()
+def put_repo(request):
+    """
+        To edit an existing repository
+    """
+    print request.matchdict['rid']
+    pass
+
 
 @repo.post()
 def post_repo(request):
