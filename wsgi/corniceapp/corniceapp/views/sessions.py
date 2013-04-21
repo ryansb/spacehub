@@ -85,7 +85,7 @@ def create_key(request):
 
         if target_user and (target_user.name == cur_user or cur_user.admin):
             key = gen_apikey()
-            newAPIKey = APIKey(apikey=key,ownerid=target_user.id)
+            newAPIKey = APIKey(apikey=key,owner_id=target_user.id)
             DBSession.add(newAPIKey)
             return {"success": True}
     return {"success": False}
