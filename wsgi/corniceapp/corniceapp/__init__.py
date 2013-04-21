@@ -15,9 +15,13 @@ if os.environ.get("OPENSHIFT_MYSQL_DB_URL", None):
     db_url = os.environ.get("OPENSHIFT_MYSQL_DB_URL") + db_name
 
 
+from pyramid.static import static_view
+static_view = static_view('static/', use_subpath=True)
+
 
 def main(global_config, **settings):
     config = Configurator(settings=settings)
+    config.add_static_view('static', 'static', cache_max_age=3600)
     config.include("cornice")
     config.scan("corniceapp.views")
     engine = create_engine(db_url)
