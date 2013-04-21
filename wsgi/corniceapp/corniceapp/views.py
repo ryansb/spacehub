@@ -2,6 +2,7 @@
 """
 from cornice import Service
 from corniceapp.models import User, Repo, DBSession
+from corniceapp.models import User, Repo, DBSession, TrackedLink, ScrapeJob
 from corniceapp.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
@@ -144,6 +145,7 @@ def post_repo(request):
     return r.to_dict()
 
 
+
 watch_page = Service(name="watch_page", path="/watch_page",
         description="Service to deal with watching page links for changed files")
 
@@ -152,7 +154,7 @@ def get_watched_page(request):
     return TrackedLinks.all()
 
 @watch_page.put()
-def put_watched_page(reqeust):
+def put_watched_page(request):
     """
         Edit watched page
     """
@@ -164,6 +166,7 @@ def post_watched_page(request):
         Add a new watched page
     """
     pass
+
 
 
 watch_runner = Service(name="watch_runner", path="/watch_runner",
