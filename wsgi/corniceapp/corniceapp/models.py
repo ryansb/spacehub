@@ -7,9 +7,8 @@ from datetime import datetime
 _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
 
-from os.path import expanduser
 import subprocess
-repo_path = expanduser('~/repos')
+repo_path = "/tmp/"
 
 
 class User(_Base):
