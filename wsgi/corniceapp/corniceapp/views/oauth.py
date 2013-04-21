@@ -1,6 +1,7 @@
 from cornice import Service
 from cornice.models import DBSession, Secret
 from pyramid.httpexceptions import HTTPTemporaryRedirect
+from github import Github
 import requests
 import logging
 import urllib
@@ -10,10 +11,14 @@ log = logging.getLogger('spacehub.oauth')
 
 GITHUB_AUTH_URL = "https://github.com/login/oauth/authorize"
 GITHUB_TOKEN_URL = "https://github.com/login/oauth/access_token"
+GITHUB_API_URL = "https://api.github.com"
 oauth = Service(name='oauth', path='/oauth', description="Service to deal with GitHub Oauth2 flow.")
 
 @oauth.get()
 def oauth_get_code(request):
+
+	client_id = request.registry.settings["client_id"]
+	client_secret = request.registry.settings["client_secret"]
 	response = oauth_authorize(request)
 	secret = None
 	if DBSession.get(Secret).all():
@@ -24,6 +29,14 @@ def oauth_get_code(request):
 	secret.access_token = response.access_token
 	DBSession.add(secret)
 	DBSession.commit()
+
+	params = {
+		"title": "Spacehub",
+		"key": secret.public_key
+	}
+
+	# add public key to user's acc.
+	requests.post(GITHUB_API_URL + "/user/keys", params=params)
 
 	raise HTTPTemporaryRedirect(location="/app/index.html#/repos")
 
