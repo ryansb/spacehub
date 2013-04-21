@@ -3,10 +3,6 @@
 from cornice import Service
 from corniceapp.models import User, DBSession
 from corniceapp.validators import validate_generic
-from pyramid.security import (
-    authenticated_userid,
-)
-from webob import Response
 import hashlib
 
 
@@ -46,6 +42,7 @@ def create_user(request):
     DBSession.add(new_user)
     return {"success": True}
 
+
 @users.put(validators=validate_generic)
 def edit_user(request):
     """
@@ -61,5 +58,13 @@ def delete_user(request):
         Delete a user
         privs: admin, or self
     """
-    pass
-
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        try:
+            target_user = DBSession.query(User).filter(User.name==request.validated['username']).one()
+        except:
+            target_user = None
+        if target_user and (target_user.name == cur_user.name or cur_user.admin):
+            DBSession.delete(target_user)
+            return {"success": True}
+    return {"success": False}
