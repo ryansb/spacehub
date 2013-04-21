@@ -1,4 +1,5 @@
 from cornice import Service
+from cornice.models import DBSession, Secret
 from pyramid.httpexceptions import HTTPTemporaryRedirect
 import requests
 import logging
@@ -14,6 +15,16 @@ oauth = Service(name='oauth', path='/oauth', description="Service to deal with G
 @oauth.get()
 def oauth_get_code(request):
 	response = oauth_authorize(request)
+	secret = None
+	if DBSession.get(Secret).all():
+		secret = DBSession.get(Secret).all()[0]
+	else:
+		secret = Secret()
+	# do stuff to secret to set info
+	secret.access_token = response.access_token
+	DBSession.add(secret)
+	DBSession.commit()
+
 	raise HTTPTemporaryRedirect(location="/app/index.html#/repos")
 
 def oauth_authorize(request):
