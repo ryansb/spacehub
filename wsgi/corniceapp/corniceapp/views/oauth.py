@@ -1,7 +1,6 @@
 from cornice import Service
 from corniceapp.models import DBSession, Secret
 from pyramid.httpexceptions import HTTPTemporaryRedirect
-from github import Github
 import requests
 import logging
 import urllib
