@@ -3,6 +3,7 @@
 from cornice import Service
 from corniceapp.models import User, DBSession
 from corniceapp.validators import validate_generic
+from corniceapp.errors import _401
 import hashlib
 
 
@@ -38,7 +39,7 @@ def create_user(request):
         email=request.validated['email']
     )
     if DBSession.query(User).filter(User.name==new_user.name).count() > 0:
-        return {"success": False}
+        raise _401()
     DBSession.add(new_user)
     return {"success": True}
 
@@ -47,9 +48,27 @@ def create_user(request):
 def edit_user(request):
     """
         Edit an existing user
-        privs: logged in
+        privs: logged in, or admin
+        {"username": "target", "changes": {"username": "change", "password": "changed", "email": "changed"}}
     """
-    pass
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        target_username = request.validated['username']
+        target_users = DBSession.query(User).filter(User.name==target_username)
+        if target_users.count() > 1:
+            target_user = target_users.one()
+            if target_user.name == cur_user.name or cur_user.admin:
+                changes = request.validated['changes']
+                if "username" in changes:
+                    if not DBSession.query(User).filter(User.name==changes['username']).count() > 1:
+                        target_user.name = changes['username']
+                if "password" in changes:
+                    target_user.password = hashlib.sha512(changes['password']).hexdigest()
+                if "email" in changes:
+                    if not DBSession.query(User).filter(User.email==changes['email']).count() > 1:
+                        target_user.email = changes['email']
+    raise _401()
+
 
 
 @users.delete(validators=validate_generic)
@@ -67,4 +86,4 @@ def delete_user(request):
         if target_user and (target_user.name == cur_user.name or cur_user.admin):
             DBSession.delete(target_user)
             return {"success": True}
-    return {"success": False}
+    raise _401()
