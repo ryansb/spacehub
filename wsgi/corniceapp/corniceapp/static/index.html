@@ -158,16 +158,31 @@
 					{{#unless controller.length}}
 						Spacehub is not managing any projects for you. Sync a repository with Github to get started.
 					{{/unless}}
-					<ul class="list span7">
+					{{#if controller.length}}
+					<p>Below is a list of all the repositories you are currently managing with Spacehub. Click on a table row to edit that project.</p>
+					{{/if}}
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Source URL</th>
+								<th>Source Type</th>
+								<th>GitHub URL</th>
+							</tr>
+						</thead>
+						<tbody>
 						{{#each repo in controller}}
-							<li class="repo inline-block">
 							{{#linkTo repo repo}}
-										<h2 class="repo-name inline">{{repo.name}}</h4>
-										<h4 class="repo-type">{{repo.github_url}}</h5>
+							<tr>
+								<td>{{#linkTo repo repo}}{{repo.name}}{{/linkTo}}</td>
+								<td>{{#linkTo repo repo}}{{repo.source_url}}{{/linkTo}}</td>
+								<td>{{#linkTo repo repo}}{{repo.source_type}}{{/linkTo}}</td>
+								<td>{{#linkTo repo repo}}{{repo.github_url}}{{/linkTo}}</td>
+							</tr>
 							{{/linkTo}}
-							</li>
 						{{/each}}
-					</ul>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</script>

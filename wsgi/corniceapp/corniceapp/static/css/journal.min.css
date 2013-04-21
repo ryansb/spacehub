@@ -21,3 +21,8 @@
 	border-radius: 5px;
 	background-color: #ddddEF;
 }
+table tr td a {
+    display:block;
+    height:100%;
+    width:100%;
+}
