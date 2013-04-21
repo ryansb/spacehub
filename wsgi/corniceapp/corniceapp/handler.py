@@ -14,7 +14,7 @@ class HandlerMeta(type):
 
         mcs.register(ins, dct['file_ext'])
 
-        return ins
+        return lambda: mcs.meta_handlers[dct['file_ext']]
 
     @classmethod
     def register(mcs, cls, ext):
