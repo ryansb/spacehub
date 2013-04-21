@@ -41,6 +41,7 @@ def login_user(request):
     """
         login a user
         privs: none
+        {"username": "name", "password": "pass"}
     """
     password = hashlib.sha512(request.validated['password']).hexdigest()
     username = request.validated['username']
