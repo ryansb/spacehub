@@ -21,7 +21,7 @@ def get_users(request):
             "repos": user.repos
         }
         scrubbed_users.append(scrubbed)
-    return scrubbed_users
+    return {"users": scrubbed_users}
 
 
 
