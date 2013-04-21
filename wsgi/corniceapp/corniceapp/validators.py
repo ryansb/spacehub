@@ -13,7 +13,10 @@ def validate_generic(request):
 
     email = authenticated_userid(request)
     if email:
-        loggedin_user = DBSession.query(User).filter(User.email==email).one()
+        try:
+            loggedin_user = DBSession.query(User).filter(User.email==email).one()
+        except:
+            loggedin_user = None
         if loggedin_user:
             request.validated['ValidUser'] = loggedin_user
             request.validated['isAdmin'] = loggedin_user.admin

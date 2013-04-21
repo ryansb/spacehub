@@ -17,14 +17,6 @@ import uuid
 login = Service(name='users', path='/users/login', description='User login endpoints')
 
 
-def get_logged_in_user(request):
-    """
-        Return the user authenticated in this request
-    """
-    email = authenticated_userid(request)
-    return DBSession.query(User).filter(User.email==email).one()
-
-
 def gen_apikey():
     """
         Generate a unique api key
@@ -83,9 +75,13 @@ def create_key(request):
     """
     cur_user = request.validated['ValidUser']
     if cur_user:
-        target_user = DBSession.query(User).filter(
-            User.name==request.validated['username']).one()
-        if target_user.name == cur_user or cur_user.admin:
+        try:
+            target_user = DBSession.query(User).filter(
+                User.name==request.validated['username']).one()
+        except:
+            target_user = None
+
+        if target_user and (target_user.name == cur_user or cur_user.admin):
             key = gen_apikey()
             newAPIKey = APIKey(apikey=key,ownerid=target_user.id)
             DBSession.add(newAPIKey)
@@ -102,12 +98,19 @@ def delete_key(request):
     """
     cur_user = request.validated['ValidUser']
     if cur_user:
-        target_user = DBSession.query(User).filter(
-            User.name==request.validated['username']).one()
-        if target_user == cur_user or cur_user.admin:
-            key = DBSession.query(APIKey).filter(
-                APIKey.apikey==request.validated['key']).one()
-            DBSession.delete(key)
-            return {"success": True}
+        try:
+            target_user = DBSession.query(User).filter(
+                User.name==request.validated['username']).one()
+        except:
+            target_user = None
+        if target_user and (target_user == cur_user or cur_user.admin):
+            try:
+                key = DBSession.query(APIKey).filter(
+                    APIKey.apikey==request.validated['key']).one()
+            except:
+                key = None
+            if key:
+                DBSession.delete(key)
+                return {"success": True}
     return {"success": False}
 
