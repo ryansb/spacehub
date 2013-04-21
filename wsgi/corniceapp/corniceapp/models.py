@@ -172,6 +172,7 @@ class Repo(_Base):
         r = git.Repo(self.dirname)
         r.git.add(os.path.join(self.dirname, "*"))
         try:
+            # btdubs this can probably be used to do remote shell commands
             r.git.commit('-m "%s"' % message)
         except:
             return False

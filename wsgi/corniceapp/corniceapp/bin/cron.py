@@ -1,7 +1,11 @@
 import sys
-from corniceapp.models import DBSession, Secret, Repo
+import os
+import os.path
+from sh import cp
+from corniceapp.models import DBSession, Repo, TrackedLink
 from sqlalchemy import engine_from_config
 from paste.deploy import appconfig
+
 
 def _getpathsec(config_uri, name):
     if '#' in config_uri:
@@ -12,10 +16,11 @@ def _getpathsec(config_uri, name):
         section = name
     return path, section
 
-def update_repos():
+
+def sync_tarballs():
     if len(sys.argv) != 2:
         exit()
-    config_uri = argv[1]
+    config_uri = sys.argv[1]
     path, section = _getpathsec(config_uri, "pyramid")
     config_name = 'config:%s' % path
     here_dir = os.getcwd()
@@ -23,7 +28,21 @@ def update_repos():
     engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
 
-    repos = DBSession.query(Repo).all()
-    for repo in repos:
-        pass
+    links = DBSession.query(TrackedLink).all()
+    for link in links:
+        repo = DBSession.query(Repo).filter(Repo.id==link.repo_id).first()
+        try:
+            repo.clone()
+        except:
+            pass
+        extracted_dir = link.retreive()
+        cp("-r {0} {1}".format(os.path.join(extracted_dir, "*"), repo.dirname))
+        repo.commit_a("Automated tarball sync: {0}".format(link.modified.strftime("%D %H:%M")))
+        print("Synced {0} -> {1}".format(link.name, repo.name))
+
+def update_repos():
+    print("Syncing Tarball links")
+    sync_tarballs()
+
+
 
