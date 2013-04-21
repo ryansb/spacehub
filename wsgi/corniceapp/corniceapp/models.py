@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column
+from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 
 
@@ -13,6 +13,7 @@ class User(_Base):
     id = Column(Integer, primary_key=True)
     name = Column(Unicode(255))
     email = Column(Unicode(255))
+    admin = Column(Boolean)
     created_at = Column(DateTime())
     password = Column(Unicode(255))
     repos = relationship("Repo")
