@@ -21,6 +21,7 @@ Get Started
 
     rhc app create spacehub python-2.7
     rhc cartridge add -a spacehub -c mysql-5.1
+    rhc cartridge add -a spacehub -c cron-1.4
     git remote add shift <OPENSHIFT PUSH URL>
     git push shift master -f
 
