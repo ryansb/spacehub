@@ -6,8 +6,17 @@ import subprocess
 import git
 from handler import handle_file
 
+from urllib import urlretrieve
+
 from uuid import uuid4
 from datetime import datetime
+
+from bs4 import BeautifulSoup as BS4
+import urllib2
+
+from os import path
+
+import hashlib
 
 _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
@@ -126,18 +135,49 @@ class TrackedLink(_Base):
         t.link_text = new.get('link_text')
         return t
 
-    def retrive(self):
+    def retrieve(self):
         tmp_dir = path.join(
-            self.repo.destdir,
+            self.repo.dirname,
             "../.recv-%s/" % (
                 hashlib.md5("repo:%i link:%i" % (self.repo.id, self.id)
                 ).hexdigest())
             )
         print "Temp Directory: %s" % tmp_dir
 
-        
+        dl_link = self.get_dl_link()
+        file_name = path.basename(dl_link)
+
+        downed_file = path.join("/tmp", file_name)
+        urlretrieve(dl_link, filename=downed_file)
+
+        print "About to process %s" % file_name
         ret_dir = handle_file(downed_file, tmp_dir)
 
+    def get_dl_link(self):
+        base, junk = path.split(self.url)
+        page = urllib2.urlopen(self.url)
+        soup = BS4(page)
+
+        _a = None
+        for link in soup.find_all("a"):
+            print "Looking at %s" % link.get('href')
+            if self.link_text.lower() in link.get_text().lower():
+                # Found the proper link
+                _a = link
+                break
+
+        if _a is None:
+            print ("Cant see anything that looks like our link. "
+                  "Must be Aliens. See: http://supb.ro/ALIENS")
+
+        href = _a.get('href')
+        print "Found d/l link: %s" % href
+        if "http:" in href or "https:" in href:
+            out_href = href
+        else:
+            out_href = path.join(base, href)
+
+        return out_href
 
 
 class ScrapeJob(_Base):
@@ -149,7 +189,6 @@ class ScrapeJob(_Base):
 
 
 def initialize_sql(engine):
-    import hashlib
     DBSession.configure(bind=engine)
     _Base.metadata.bind = engine
     _Base.metadata.drop_all()

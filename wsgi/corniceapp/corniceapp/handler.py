@@ -26,11 +26,13 @@ class HandlerMeta(type):
         match = mcs.meta_handlers.keys()
         _proper_match = None
         _ext = None
-        while match is not None:
+        while len(match) > 0:
             file_name, ext = os.path.splitext(file_name)
-            matches = filter(lambda x: x[:0-len(ext)] is ext,
+            print "Looking at %s..." % ext
+            matches = filter(lambda x: x[:-len(ext)] is ext,
                     mcs.meta_handlers.keys())
             if matches:
+                print "Possible matches...", ", ".join(matches)
                 _ext = "%s.%s" % (ext, _ext)
                 _proper_match = matches
 
