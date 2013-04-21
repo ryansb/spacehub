@@ -1,7 +1,7 @@
 """Main entry point
 """
 from pyramid.config import Configurator
-from pyramid.authentication import AuthTkAuthenticationPolicy
+from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 
@@ -19,7 +19,7 @@ if os.environ.get("OPENSHIFT_MYSQL_DB_URL", None):
 
 
 def main(global_config, **settings):
-    authn_policy = AuthTkAuthenticationPolicy(
+    authn_policy = AuthTktAuthenticationPolicy(
         secret='changemeplease')
     authz_policy = ACLAuthorizationPolicy()
 
