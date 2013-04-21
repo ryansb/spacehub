@@ -2,6 +2,8 @@
 """
 from cornice import Service
 from corniceapp.models import Repo, DBSession
+from corniceapp.validators import valid_user
+from corniceapp.errors import _401
 
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
@@ -13,45 +15,61 @@ repo_act = Service(name='repo', path='/repo/act/{rid}', description="Service to 
 
 
 
-@repo_act.put()
+@repo_act.put(validators=valid_user)
 def commit_repo(request):
     """
         commit whatever changes have been made
     """
-    print request.matchdict['rid']
-    print request.matchdict['rid']
-    r = DBSession.query(Repo).filter(Repo.id==1).first()
-    r.commit_a(request.json.get("message"))
-    return "yupyup"
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        print request.matchdict['rid']
+        print request.matchdict['rid']
+        r = DBSession.query(Repo).filter(Repo.id==1).first()
+        if r.owner_id == cur_user.id or cur_user.admin:
+            r.commit_a(request.json.get("message"))
+            return "yupyup"
+    raise _401()
 
-@repo_act.get()
+
+@repo_act.get(validators=valid_user)
 def clone_repo(request):
     """
         clone a repo fresh
     """
-    print request.matchdict['rid']
-    r = DBSession.query(Repo).filter(Repo.id==1).first()
-    r.clone()
-    return "lololol"
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        print request.matchdict['rid']
+        r = DBSession.query(Repo).filter(Repo.id==1).first()
+        if r.owner_id == cur_user.id or cur_user.admin:
+            r.clone()
+            return "lololol"
+    raise _401()
 
 
 @repo.get()
 def get_repos(request):
     return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
 
-@repo.post()
+
+@repo.post(validators=valid_user)
 def post_repo(request):
     """
         To create a new repository
     """
-    r = Repo.from_dict(request.json)
-    DBSession.add(r)
-    DBSession.commit()
-    return r.to_dict()
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        r = Repo.from_dict(request.json)
+        r.user_id = cur_user.id
+        DBSession.add(r)
+        DBSession.commit()
+        return r.to_dict()
+    raise _401()
+
 
 @repo_param.get()
 def get_param_repo(request):
     return DBSession.query(Repo).filter(Repo.id==request.matchdict['rid']).first().to_dict()
+
 
 @repo_param.put()
 def update_repo(request):
