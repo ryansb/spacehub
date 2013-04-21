@@ -22,7 +22,7 @@ def gen_apikey():
         Generate a unique api key
     """
     for _ in range(10):
-        newkey = str(uuid.uuid5()).replace('-', '')
+        newkey = str(uuid.uuid5(uuid.NAMESPACE_DNS, 'spacehub.org')).replace('-', '')
         if DBSession.query(APIKey).filter(APIKey.apikey==newkey).count() == 0:
             return newkey
     raise Exception("can't make a unique key... wat")
