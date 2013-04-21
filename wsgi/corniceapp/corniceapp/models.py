@@ -98,11 +98,11 @@ class TrackedLink(_Base):
     __tablename__ = 'tracked_links'
 
     id = Column(Integer, primary_key=True)
-    url = Column(String)
-    name = Column(String)
+    url = Column(Text())
+    name = Column(Text())
     last_accessed = Column(DateTime())
     modified = Column(DateTime())
-    link_text = Column(Unicode)
+    link_text = Column(Text())
     repo_id = Column(Integer, ForeignKey('repos.id'))
     repo = relationship("Repo", backref="track_link")
 
