@@ -45,11 +45,11 @@ class Repo(_Base):
             last_updated=self.last_updated,
             source_url=self.source_url,
             github_url=self.github_url,
-            path=self.path ,
+            path=self.path
         )
 
 
 def initialize_sql(engine):
     DBSession.configure(bind=engine)
     _Base.metadata.bind = engine
-    _Base.metadata.create_all(engine, checkfirst=True)
+    _Base.metadata.create_all(engine, checkfirst=False)
