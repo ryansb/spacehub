@@ -91,7 +91,7 @@ App.NewRepoController = Ember.Controller.extend({
 		var source_type = $('input[name=repo-source-type]:checked').val();
 		body = {
 			"name": name,
-			"github_uname": github_url,
+			"github_uname": github_uname,
 			"github_repo": github_repo,
 			"source_url": source_url,
 			"source_type": source_type
@@ -121,7 +121,7 @@ App.RepoController = Ember.ObjectController.extend({
 		var source_type = $('input[name=repo-source-type]:checked').val();
 		body = {
 			"name": name,
-			"github_uname": github_url,
+			"github_uname": github_uname,
 			"github_repo": github_repo,
 			"source_url": source_url,
 			"source_type": source_type
