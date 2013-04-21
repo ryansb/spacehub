@@ -41,6 +41,8 @@ def create_user(request):
         password=hashlib.sha512(request.validated['password']).hexdigest(),
         email=request.validated['email']
     )
+    if DBSession.query(User).filter(User.name==new_user.name).count() > 0:
+        return {"success": False}
     DBSession.add(new_user)
     return {"success": True}
 
