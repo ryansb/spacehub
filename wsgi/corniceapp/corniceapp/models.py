@@ -2,6 +2,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from datetime import datetime
+from shlex import split
 import subprocess
 import git
 
@@ -80,8 +81,8 @@ class Repo(_Base):
         return True
 
     def push(self):
-        print "Setting clone job"
-        subprocess.check_call('cd %s && git push --all origin'.split(' '))
+        print "Setting push job"
+        subprocess.check_call(split('cd {0} && git push --all origin').format(self.dirname))
         return True
 
     def commit_a(self, message):
