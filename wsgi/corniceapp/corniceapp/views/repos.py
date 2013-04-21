@@ -1,16 +1,7 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, Repo, DBSession
-from corniceapp.validators import validate_generic
-from pyramid.security import (
-    authenticated_userid,
-    remember,
-    forget,
-)
-from webob import Response
-import hashlib
-import json
+from corniceapp.models import Repo, DBSession
 
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
@@ -18,9 +9,6 @@ repo = Service(name='repo', path='/repo', description="Service to deal with "
 repo_param = Service(name='repo', path='/repo/{rid}', description="Service to "
                      "deal with the addition/deletion of repositories")
 
-@repo.get()
-def get_repos(request):
-    return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
 
 
 @repo_param.put()
@@ -35,15 +23,19 @@ def put_repo(request):
     return "yupyup"
 
 @repo_param.get()
-def put_repo(request):
+def get_repo(request):
     """
-        To edit an existing repository
+        View an exisiting repository
     """
     print request.matchdict['rid']
     r = DBSession.query(Repo).filter(Repo.id==1).first()
     r.clone()
     return "lololol"
 
+
+@repo.get()
+def get_repos(request):
+    return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
 
 @repo.post()
 def post_repo(request):
