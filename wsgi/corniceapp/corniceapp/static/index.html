@@ -38,7 +38,17 @@
 				<div class="row-fluid">
 					{{ outlet }}
 				</div>
-			</div>	
+			</div>
+			<footer class="footer">
+				<div class="container-fluid">
+					<div style="text-align: center">
+					<p class="muted">Built with <i class="icon-heart"></i> by the <a href="http://foss.rit.edu/">FOSSBox</a>.</p>
+					<p class="muted">
+						Source available under the AGPLv3 on <a href="https://www.github.com/ryansb/spacehub">GitHub</a>
+					</p>
+					</div>
+				</div>
+			</footer>	
 		</script>
 		<script type="text/x-handlebars" data-template-name="index">
 			<div class="hero-unit">
@@ -184,7 +194,7 @@
 					<h3>Tools</h3>
 					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-success"><i class="icon-plus icon-white"></i> Sync Project</button>{{/linkTo}}
 				</div>
-				<div class="span10">
+				<div class="span6 well">
 					<form class="form-horizontal" id="create-repo-form" {{action "postRepo" on="submit"}}>
 						<fieldset>
 							<legend>Sync Project with Github</legend>
@@ -239,11 +249,18 @@
 								</div>
 							</div>
 						</fieldset>
-						<div class="control-group span6">
+						<div class="control-group">
 							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-info">Do it!</button>
 						</div>
 					</form>
 
+				</div>
+				<div class="span4">
+					<h3>Help: Syncing a Project</h3>
+					<p>
+						You can mirror a hosted project to your organizational Github account.
+						The mirrored project will be automatically translated into a Git repository and set up to automatically sync to Github on regular intervals. When possible, commits will be mirrored from the original Git, Mercurial, or Subversion repository. When that is not possible, an automated commit message will be generated for you.
+					</p>
 				</div>
 			</div>			
 		</script>
