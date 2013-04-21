@@ -34,10 +34,25 @@ class Repo(_Base):
     owner_id = Column(Integer, ForeignKey('users.id'))
     name = Column(Unicode(255))
     created_at = Column(DateTime())
-    url = Column(Text())
+    last_updated = Column(DateTime())
+    source_url = Column(Text())
+    github_url = Column(Text())
+    path = Column(Text())
+
+    def to_dict(self):
+        return dict(
+            owner_id=self.owner_id,
+            name=self.name,
+            created_at=self.created_at,
+            last_updated=self.last_updated,
+            source_url=self.source_url,
+            github_url=self.github_url,
+            path=self.path
+        )
 
 
 def initialize_sql(engine):
     DBSession.configure(bind=engine)
     _Base.metadata.bind = engine
-    _Base.metadata.create_all(engine, checkfirst=True)
+    _Base.metadata.drop_all()
+    _Base.metadata.create_all(engine, checkfirst=False)

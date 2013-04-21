@@ -76,7 +76,7 @@ repo = Service(name='repo', path='/repo', description="Service to deal with "
 
 @repo.get()
 def get_repos(request):
-    return Repo.all()
+    return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
 
 
 @repo.put()
