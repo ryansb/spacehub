@@ -30,15 +30,24 @@ class HandlerMeta(type):
         while ext:
             file_name, ext = os.path.splitext(file_name)
             ext = ext[1:]
+
+            if not ext:
+                break
+
             print "Looking at %s..." % ext
-            matches = filter(lambda x: x[:-len(ext)] is ext,
+            matches = filter(lambda x: x[-len(ext):] in ext,
                     mcs.meta_handlers.keys())
+
+            print matches
             if matches:
                 print "Possible matches...", ", ".join(matches)
-                _ext = "%s.%s" % (ext, _ext)
+                _ext = ".".join([ext, _ext]) if _ext else ext
                 _proper_match = matches
+            else:
+                break
 
         # At this point we should only have 1 match
+        print _ext, _proper_match
         if _ext not in _proper_match:
             # we done goofed
             raise ValueError("We have no idea how to process this file")
