@@ -77,7 +77,7 @@ def create_key(request):
         privs: logged in, admin
         {"username": "dat-user"}
     """
-    cur_user = get_logged_in_user(request)
+    cur_user = request.validated['ValidUser']
     if cur_user:
         target_user = DBSession.query(User).filter(
             name=request.validated['username']).one()
@@ -96,11 +96,10 @@ def delete_key(request):
         privs: logged in, admin
         {"username": "user", "key": "dat-key"}
     """
-    cur_user = get_logged_in_user(request)
-    if cur_user:
+    if request.validated['ValidUser']:
         target_user = DBSession.query(User).filter(
             name=request.validated['username']).one()
-        if target_user == cur_user or cur_user.admin:
+        if target_user == request.validated['username'] or request.validated['isAdmin']:
             key = DBSession.query(APIKey).filter(
                 apikey=request.validated['key']).one()
             DBSession.delete(key)
