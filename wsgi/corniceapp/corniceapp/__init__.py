@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from corniceapp.models import initialize_sql
 
 
-db_name = "spacehub"
+db_name = "missioncontrol"
 
 db_url = "sqlite:////tmp/test.db"
 
