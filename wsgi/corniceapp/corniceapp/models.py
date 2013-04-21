@@ -69,6 +69,7 @@ class Repo(_Base):
 
     def to_dict(self):
         return dict(
+            id=self.id,
             owner_id=self.owner_id,
             name=self.name,
             created_at=self.created_at.strftime("%D %H:%M"),
