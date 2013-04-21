@@ -28,7 +28,10 @@ def oauth_authorize(request):
 		"client_secret": request.registry.settings["client_secret"],
 		"code": request.params["code"]
 	}
-	return requests.post(GITHUB_TOKEN_URL, params).json()	
+	headers = {
+		"Accept": "application/json"
+	}
+	return requests.post(GITHUB_TOKEN_URL, params, headers=headers).json()	
 
 @oauth.post()
 def outh_redirect(request):
