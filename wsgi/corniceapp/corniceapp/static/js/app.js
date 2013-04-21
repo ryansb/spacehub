@@ -31,6 +31,9 @@ App.Router.map(function () {
 	this.route("about", {
 		path: "/about"
 	});
+	this.route("admin", {
+		path: "/admin"
+	});
 	this.route("index", {
 		path: "/"
 	});
