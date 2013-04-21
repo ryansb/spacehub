@@ -90,7 +90,7 @@ class Repo(_Base):
         if not os.path.exists(self.dirname):
             self.clone()
         r = git.Repo(self.dirname)
-        r.git.add(self.dirname)
+        r.git.add(os.path.join(self.dirname, "*"))
         r.git.commit('-am "%s"' % message)
         return True
 
