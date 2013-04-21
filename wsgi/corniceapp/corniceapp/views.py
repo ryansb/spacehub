@@ -2,6 +2,7 @@
 """
 from cornice import Service
 from corniceapp.models import User, Repo, DBSession
+from corniceapp.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
     remember,
@@ -18,7 +19,7 @@ hello = Service(name='hello', path='/', description="Simplest app")
 login = Service(name='users', path='/users/login', description='User login endpoints')
 
 
-@login.post()
+@login.post(validators=validate_generic)
 def login_user(request):
     """
         login a user
@@ -43,13 +44,15 @@ def logout_user(request):
         privs: logged in
     """
     headers = forget(request)
-    pass
+    resp = Response(json.dumps({"success": True}))
+    resp.headerlist.extend(headers)
+    return resp
 
 
 users = Service(name='users', path='/users', description="User management api")
 
 
-@users.get()
+@users.get(validators=validate_generic)
 def get_users(request):
     """Get all users, privs: admin"""
     users = DBSession.query(User).all()
@@ -64,7 +67,7 @@ def get_users(request):
 
 
 
-@users.post()
+@users.post(validators=validate_generic)
 def create_user(request):
     """
         Create a new User
@@ -78,7 +81,7 @@ def create_user(request):
     )
     DBSession.add(new_user)
 
-@users.put()
+@users.put(validators=validate_generic)
 def edit_user(request):
     """
         Edit an existing user
@@ -87,7 +90,7 @@ def edit_user(request):
     pass
 
 
-@users.delete()
+@users.delete(validators=validate_generic)
 def delete_user(request):
     """
         Delete a user
@@ -99,7 +102,7 @@ def delete_user(request):
 apikeys = Service(name='apikeys', path='/apikeys', description="Manage API keys")
 
 
-@apikeys.post()
+@apikeys.post(validators=validate_generic)
 def create_key(request):
     """
         Create a new api key for a user
@@ -108,7 +111,7 @@ def create_key(request):
     pass
 
 
-@apikeys.delete()
+@apikeys.delete(validators=validate_generic)
 def delete_key(request):
     """
         Delete an api key
