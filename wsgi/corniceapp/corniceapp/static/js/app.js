@@ -5,7 +5,7 @@ App = Ember.Application.create({
 	LOG_TRANSITIONS: true,
 	// don't panic, this is only used for showing/hiding
 	// a few minor things, like the logout button.
-	authorized: true 
+	authorized: false 
 });
 
 //
@@ -244,9 +244,10 @@ App.UserController = Ember.Controller.extend({
 App.ReposController = Ember.ArrayController.extend({});
 App.ApplicationController = Ember.Controller.extend({
 	logout: function logout() {
-		var app = this;
-		$.removeCookie("session");
-		app.set('authorized', false);
+		$.ajax({
+			url: "/users/login",
+			type: "DELETE"
+		});
 		location.reload(true);
 	}
 });
