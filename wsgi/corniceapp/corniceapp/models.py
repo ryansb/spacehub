@@ -163,7 +163,17 @@ class Repo(_Base):
 
     def push(self):
         print "Setting push job"
-        subprocess.check_call(split('cd {0} && git push --all origin').format(self.dirname))
+        sekrit = DBSession.query(Secret).first()
+        with open("/tmp/makey", 'w') as f:
+            f.write(sekrit.private_key)
+        with open("/tmp/massh.sh", 'w') as f:
+            f.write("""
+                    #!/bin/bash
+                    exec ssh -i /tmp/makey $@
+                    """)
+        subprocess.check_call(split("chmod +x /tmp/massh.sh"))
+        subprocess.check_call(split("chmod 600 /tmp/makey"))
+        subprocess.check_call(split('cd {0} && GIT_SSH="/tmp/massh.sh" git push --all origin').format(self.dirname))
         return True
 
     def commit_a(self, message):
