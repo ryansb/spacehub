@@ -127,8 +127,6 @@ class TgzFileHandler(FileHandlerBase):
 
 def handle_file(file_name, dest):
     handler = HandlerMeta.get_handler_by_filename(file_name)
-    handler.handle(file_name, dest)
-
-    return dest
+    return handler.handle(file_name, dest)
 
 __all__ = ['handle_file']
