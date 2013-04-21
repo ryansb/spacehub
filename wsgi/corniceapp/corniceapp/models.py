@@ -104,6 +104,16 @@ class Repo(_Base):
         r.source_type = new.get('source_type')
         return r
 
+    def updict(self, new):
+        self.name = new.get('name', self.name)
+        self.last_updated = datetime.now()
+        self.source_url = new.get('source_url', self.source_url)
+        self.github_uname = new.get('github_uname', self.github_uname)
+        self.github_repo = new.get('github_repo', self.github_repo)
+        self.clone_url = new.get('clone_url', self.clone_url)
+        self.dirname = new.get('dirname', self.dirname)
+        return True
+
     def clone(self):
         print "Setting clone job"
         print ["git", "clone", self.clone_url, self.dirname]
