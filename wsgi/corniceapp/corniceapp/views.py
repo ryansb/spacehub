@@ -92,4 +92,7 @@ def post_repo(request):
     """
         To create a new repository
     """
-    pass
+    r = Repo.from_dict(request.json)
+    DBSession.add(r)
+    DBSession.commit()
+    return r.to_dict()

@@ -53,6 +53,18 @@ class Repo(_Base):
             path=self.path
         )
 
+    @classmethod
+    def from_dict(cls, new):
+        r = Repo()
+        r.owner_id = new.get('owner_id')
+        r.name = new.get('name')
+        r.created_at = new.get('created_at')
+        r.last_updated = new.get('last_updated')
+        r.source_url = new.get('source_url')
+        r.github_url = new.get('github_url')
+        r.path = new.get('pat')
+        return r
+
 
 def initialize_sql(engine):
     DBSession.configure(bind=engine)
