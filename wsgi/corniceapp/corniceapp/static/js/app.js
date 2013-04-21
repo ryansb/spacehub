@@ -3,7 +3,9 @@
 //
 App = Ember.Application.create({
 	LOG_TRANSITIONS: true,
-	authorized: true
+	// don't panic, this is only used for showing/hiding
+	// a few minor things, like the logout button.
+	authorized: true 
 });
 
 //
@@ -26,39 +28,25 @@ App.insertErrorMessage = function insertErrorMessage(element, message) {
 // Router
 //
 App.Router.map(function () {
-	this.route("create", {
-		path: "/create"
-	});
 	this.route("about", {
 		path: "/about"
 	});
-	this.resource("dashboard", {
-		path: "/dashboard"
-	});
-	this.resource("dashboard", {
+	this.route("index", {
 		path: "/"
 	});
-	this.resource("signup", {
+	this.resource("user", {
 		path: "/signup"
 	});
-	this.resource("box", {
-		path: "/box/:box_id"
+	this.resource("repo", {
+		path: "/repo/:repo_id"
 	});
 });
 //
 // Routes
 //
-App.BoxRoute = Ember.Route.extend({
+App.RepoRoute = Ember.Route.extend({
 	model: function (params) {
-		return App.Box.find(params.box_id);
-	},
-	setupController: function (controller, model) {
-		controller.set('content', model);
-	}
-});
-App.DashboardRoute = Ember.Route.extend({
-	model: function () {
-		return App.Box.findAll();
+		return App.Repo.find(params.repo_id);
 	},
 	setupController: function (controller, model) {
 		controller.set('content', model);
@@ -67,75 +55,52 @@ App.DashboardRoute = Ember.Route.extend({
 //
 // Views
 //
-App.CreateView = Ember.View.extend({
-	didInsertElement: function didInsertElement() {
-		// First let's prepend icons (needed for effects)
-		$(".checkbox, .radio").prepend("<span class='icon'></span><span class='icon-to-fade'></span>");
 
-		$(".checkbox, .radio").click(function () {
-			setupLabel();
-		});
-		setupLabel();
-		$('.has-tip').tooltip();
-	}
-});
-App.BoxView = Ember.View.extend({
-	didInsertElement: function didInsertElement() {
-		// First let's prepend icons (needed for effects)
-		$(".checkbox, .radio").prepend("<span class='icon'></span><span class='icon-to-fade'></span>");
-
-		$(".checkbox, .radio").click(function () {
-			setupLabel();
-		});
-		setupLabel();
-		$('.has-tip').tooltip();
-	}
-});
 //
 // Controllers
 //
-App.BoxController = Ember.ObjectController.extend({
-	saveBox: function saveBox() {
+App.RepoController = Ember.ObjectController.extend({
+	putRepo: function putRepo() {
 		var controller = this;
 		console.log(controller);
-		console.log("Saving box.");
+		console.log("Saving Repo.");
 		$.ajax({
-			url: "/box/" + controller.content.id,
+			url: "/repo/" + controller.content.id,
 			type: "PUT",
-			data: $("#box-form").serialize(),
+			data: $("#repo-form").serialize(),
 			success: function (response) {
-				console.log("Successfully saved box.");
-				controller.set('content', App.Box.findAll());
+				console.log("Successfully saved repo.");
+				controller.set('content', App.Repo.findAll());
 				controller.transitionToRoute("dashboard");
 			},
 			error: function (response) {
-				console.log("Failed to save box.");
+				console.log("Failed to save repo.");
 			}
 		});
 	},
-	deleteBox: function deleteBox() {
+	deleteRepo: function deleteRepo() {
 		var controller = this;
-		console.log("Deleting box.");
+		console.log("Deleting repo.");
 		$.ajax({
-			url: "/box/" + controller.content.id,
+			url: "/repo/" + controller.content.id,
 			type: "DELETE",
 			success: function (response) {
-				console.log("Successfully deleted box.");
-				controller.set('content', App.Box.findAll());
+				console.log("Successfully deleted repo.");
+				controller.set('content', App.Repo.findAll());
 				controller.transitionToRoute("dashboard");
 			},
 			error: function (response) {
-				console.log("Failed to delete box.");
+				console.log("Failed to delete repo.");
 			}
 		});
 	}
 });
-App.SignupController = Ember.Controller.extend({
+App.UserController = Ember.Controller.extend({
 	minPasswordLength: 6,
-	signUp: function signUp() {
+	postUser: function postUser() {
 		var controller = this;
 		var user = $("#username").val();
-		var phone = $("#phone").val();
+		var email = $("#email").val();
 		var pwd1 = $("#password1").val();
 		var pwd2 = $("#password2").val();
 		var errors = false;
@@ -147,10 +112,10 @@ App.SignupController = Ember.Controller.extend({
 			$("#username-control").addClass("warning");
 			App.insertErrorMessage("#username-help", "You need a username.");
 		}
-		if (phone.length < 1) {
+		if (email.length < 1) {
 			errors = true;
-			$("#phone-control").addClass("warning");
-			App.insertErrorMessage("#phone-help", "You need a 10-digit U.S. phone number.\n");
+			$("#email-control").addClass("warning");
+			App.insertErrorMessage("#email-help", "You need an email address.\n");
 		}
 		if ((pwd1.length < controller.minPasswordLength) || (pwd2.length < controller.minPasswordLength)) {
 			errors = true;
@@ -163,11 +128,17 @@ App.SignupController = Ember.Controller.extend({
 			App.insertErrorMessage("#password-help", "Your password entries don't match. Check your spelling?");
 		}
 
+		var body = {
+			"username": user,
+			"email": email, 
+			"password": pwd1
+		}
+
 		if (!errors) {
 			$.ajax({
-				url: "/user",
+				url: "/users",
 				type: "POST",
-				data: $("#signup-form").serialize(),
+				data: JSON.stringify(body),
 				success: function (response) {
 					controller.transitionToRoute("dashboard");
 					console.log("Successfully created user.");
@@ -184,7 +155,7 @@ App.SignupController = Ember.Controller.extend({
 		App.resetFormValidation('#login-form');
 		console.log("Passwords match.");
 		$.ajax({
-			url: "/session",
+			url: "/users/login",
 			type: "POST",
 			data: $("#login-form").serialize(),
 			success: function (response) {
@@ -202,24 +173,6 @@ App.SignupController = Ember.Controller.extend({
 	}
 });
 App.DashboardController = Ember.ArrayController.extend({});
-App.CreateController = Ember.Controller.extend({
-	createBox: function createBox() {
-		var controller = this;
-		$.ajax({
-			url: "/box",
-			type: "POST",
-			data: $("#create-box-form").serialize(),
-			success: function (response) {
-				controller.set('content', App.Box.findAll());
-				controller.transitionToRoute("dashboard");
-			},
-			error: function (response) {
-				console.log("Failed to create new box.");
-			}
-		});
-		return false;
-	}
-});
 App.ApplicationController = Ember.Controller.extend({
 	logout: function logout() {
 		var app = this;
@@ -231,13 +184,13 @@ App.ApplicationController = Ember.Controller.extend({
 // 
 // Models
 // 
-App.Box = Ember.Object.extend();
-App.Box.reopenClass({
+App.Repo = Ember.Object.extend();
+App.Repo.reopenClass({
 	find: function (id) {
-		var result = App.Box.create({
+		var result = App.Repo.create({
 			isLoaded: false
 		});
-		$.getJSON("/box/" + id, function (data) {
+		$.getJSON("/repo/" + id, function (data) {
 			result.setProperties(data);
 			result.set('id', data['__id__']);
 			result.set('isLoaded', true);
@@ -246,10 +199,10 @@ App.Box.reopenClass({
 	},
 	findAll: function () {
 		var results = [];
-		$.getJSON("/box", function (data) {
+		$.getJSON("/repo", function (data) {
 			$.each(data, function (index, elem) {
 				elem.id = elem.__id__;
-				results.pushObject(App.Box.create(elem));
+				results.pushObject(App.Repo.create(elem));
 			});
 		});
 		return results;
