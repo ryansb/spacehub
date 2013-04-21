@@ -219,6 +219,7 @@ class TrackedLink(_Base):
         t.name = new.get('name')
         t.url = new.get('url')
         t.link_text = new.get('link_text')
+        t.modified = new.get('modified', datetime.now())
         return t
 
     def retrieve(self):
@@ -238,7 +239,9 @@ class TrackedLink(_Base):
 
         print "About to process %s" % file_name
         ret_dir = handle_file(downed_file, tmp_dir)
-
+        self.last_accessed = datetime.now()
+        DBSession.add(self)
+        DBSession.commit()
         return ret_dir
 
     def get_dl_link(self):
