@@ -79,6 +79,17 @@ class TrackedLink(_Base):
     modified = Column(DateTime())
     link_text = Column(Unicode)
     repo_id = Column(Integer, ForeignKey('repos.id'))
+    repo = relationship("Repo", backref="track_link")
+
+    def __dict__(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "last_access" : self.last_accessed,
+            "last_modified" : self.modified,
+            "link_text" : self.link_text,
+            "repo" : self.repo_id
+            }
 
 
 class ScrapeJob(_Base):
