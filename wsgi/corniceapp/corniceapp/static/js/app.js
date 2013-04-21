@@ -154,10 +154,14 @@ App.UserController = Ember.Controller.extend({
 		var controller = this;
 		App.resetFormValidation('#login-form');
 		console.log("Passwords match.");
+		body = {
+			username:  $("#login-username").val(),
+			password: $("#login-password").val()
+		}
 		$.ajax({
 			url: "/users/login",
 			type: "POST",
-			data: $("#login-form").serialize(),
+			data: JSON.stringify(body),
 			success: function (response) {
 				controller.transitionToRoute("dashboard");
 				console.log("Successfully logged in user.");
