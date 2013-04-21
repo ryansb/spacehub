@@ -55,8 +55,9 @@ class Repo(_Base):
 
 
 def initialize_sql(engine):
+    import hashlib
     DBSession.configure(bind=engine)
     _Base.metadata.bind = engine
     _Base.metadata.drop_all()
     _Base.metadata.create_all(engine, checkfirst=False)
-    DBSession.add(User(name="admin", password="password", admin=True, email="admin@spacehub.com"))
+    DBSession.add(User(name="admin", password=hashlib.sha512("password").hexdigest(), admin=True, email="admin@spacehub.com"))

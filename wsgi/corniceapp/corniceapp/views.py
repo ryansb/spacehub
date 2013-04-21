@@ -2,9 +2,24 @@
 """
 from cornice import Service
 from corniceapp.models import User, Repo, DBSession
+import hashlib
 
 
 hello = Service(name='hello', path='/', description="Simplest app")
+
+
+login = Service(name='users', path='/users/login', description='User login endpoints')
+
+
+@login.post()
+def login_user(request):
+    password = hashlib.sha512(request.validated['password']).hexdigest()
+    username = request.validated['username']
+    pass
+
+@login.delete()
+def logout_user(request):
+    pass
 
 
 users = Service(name='users', path='/users', description="User management api")
@@ -33,7 +48,7 @@ def create_user(request):
     """
     new_user = User(
         name=request.validated['username'],
-        password=request.validated['password'],
+        password=hashlib.sha512(request.validated['password']).hexdigest(),
         email=request.validated['email']
     )
     DBSession.add(new_user)
