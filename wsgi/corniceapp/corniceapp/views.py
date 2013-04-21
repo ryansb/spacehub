@@ -17,7 +17,7 @@ def get_users(request):
     scrubbed_users = []
     for user in users:
         scrubbed = {
-            "username": user.username,
+            "username": user.name,
             "repos": user.repos
         }
         scrubbed_users.append(scrubbed)
@@ -32,7 +32,7 @@ def create_user(request):
         This is expected a username, password, and email
     """
     new_user = User(
-        username=request.validated['username'],
+        name=request.validated['username'],
         password=request.validated['password'],
         email=request.validated['email']
     )
