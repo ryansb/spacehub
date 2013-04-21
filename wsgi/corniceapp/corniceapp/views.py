@@ -1,7 +1,7 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, Repo
+from corniceapp.models import User, Repo, DBSession
 
 
 hello = Service(name='hello', path='/', description="Simplest app")
@@ -27,9 +27,16 @@ def get_users(request):
 
 @users.post()
 def create_user(request):
-    """Create a new User"""
-    pass
-
+    """
+        Create a new User
+        This is expected a username, password, and email
+    """
+    new_user = User(
+        username=request.validated['username'],
+        password=request.validated['password'],
+        email=request.validated['email']
+    )
+    DBSession.add(new_user)
 
 @users.put()
 def edit_user(request):
