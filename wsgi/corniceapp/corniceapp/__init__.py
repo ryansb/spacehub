@@ -31,7 +31,7 @@ def main(global_config, **settings):
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.add_static_view('/app', 'static', cache_max_age=3600)
-    config.add_view(lambda r: Response('We didn not find your page. We did '
+    config.add_view(lambda r: Response('We did not find your page. We did '
                                        'find <a '
                                        'href="http://supb.ro/ALIENS">ALIENS</a>',
                                        status=404),
