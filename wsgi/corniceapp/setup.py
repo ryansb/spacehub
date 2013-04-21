@@ -35,7 +35,7 @@ setup(name='corniceapp',
         'zope.sqlalchemy',
         'WebError',
         'sh',
-        'BeautifulSoup'
+        'BeautifulSoup',
         'GitPython',
     ],
     entry_points = """\
