@@ -17,6 +17,13 @@ class User(_Base):
     repos = relationship("Repo")
 
 
+class APIKey():
+    __tablename__ = "apikeys"
+    id = Column(Integer, primary_key=True)
+    create_at = Column(DateTime())
+    apikey = Column(Unicode(255))
+    owner_id = Column(Integer, ForeignKey('users.id'))
+
 class Repo(_Base):
     __tablename__ = "repos"
     __mapper_args__ = dict(order_by="created_at desc")
