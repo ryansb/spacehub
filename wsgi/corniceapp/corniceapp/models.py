@@ -108,6 +108,8 @@ class Repo(_Base):
     clone_url = Column(Text())
     dirname = Column(Text())
     source_type = Column(Text())
+    link_text = Column(Text())
+
 
     @property
     def github_url(self):
@@ -126,7 +128,8 @@ class Repo(_Base):
             github_url=self.github_url,
             clone_url=self.clone_url,
             dirname=self.dirname,
-            source_type=self.source_type
+            source_type=self.source_type,
+            link_text=self.link_text
         )
 
     @classmethod
@@ -142,6 +145,7 @@ class Repo(_Base):
         r.clone_url = new.get('clone_url', 'git@github.com:{0}/{1}.git'.format(r.github_uname, r.github_repo))
         r.dirname = new.get('dirname', os.path.join('/tmp/', new.get('name')))
         r.source_type = new.get('source_type')
+        r.link_text = new.get('link_text')
         return r
 
     def updict(self, new):
@@ -153,12 +157,14 @@ class Repo(_Base):
         self.clone_url = new.get('clone_url', self.clone_url)
         self.source_type = new.get('source_type', self.source_type)
         self.dirname = new.get('dirname', self.dirname)
+        self.link_text = new.get('link_text', self.link_text)
         return True
 
     def clone(self):
         print "Setting clone job"
-        print ["git", "clone", self.clone_url, self.dirname]
-        subprocess.check_call(["git", "clone", self.clone_url, self.dirname])
+        if not os.path.exists(self.dirname):
+            print ["git", "clone", self.clone_url, self.dirname]
+            subprocess.check_call(["git", "clone", self.clone_url, self.dirname])
         return True
 
     def push(self):
