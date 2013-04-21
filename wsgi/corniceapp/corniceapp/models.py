@@ -2,12 +2,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from datetime import datetime
+import subprocess
+import git
 
 
 _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
 
-import subprocess
 repo_path = "/tmp/"
 
 
