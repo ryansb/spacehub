@@ -45,7 +45,10 @@ def login_user(request):
     """
     password = hashlib.sha512(request.validated['password']).hexdigest()
     username = request.validated['username']
-    user = DBSession.query(User).filter(User.name==username).one()
+    try:
+        user = DBSession.query(User).filter(User.name==username).one()
+    except:
+        return {"success": False}
     if user and user.password == password:
         headers = remember(request, user.email)
         resp = Response(json.dumps({"success": True}))
