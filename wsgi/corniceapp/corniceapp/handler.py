@@ -68,12 +68,11 @@ class ZipFileHandler(FileHandlerBase):
     def handle(self, file_name, dest):
         dest = os.path.abspath(dest)
         from sh import unzip
-        dest_flag = "-d %s" % dest
         if not os.path.exists(dest):
             os.makedirs(dest)
 
         # Make moves
-        tar(file_name, dest_flag)
+        tar(file_name, '-d', dest)
 
         if len(os.listdir(dest)) is 1:
             # somewhat properly packaged tarball
@@ -88,12 +87,11 @@ class TarFileHandler(FileHandlerBase):
         dest = os.path.abspath(dest)
         from sh import tar
         ops_flags = "xvf"
-        dest_flag = "-C %s" % dest
         if not os.path.exists(dest):
             os.makedirs(dest)
 
         # Make moves
-        tar(ops_flags, file_name, dest_flag)
+        tar(ops_flags, file_name, "-C", dest)
 
         if len(os.listdir(dest)) is 1:
             # somewhat properly packaged tarball
@@ -105,12 +103,11 @@ def tgz_handle(self, file_name, dest):
     dest = os.path.abspath(dest)
     from sh import tar
     ops_flags = "zxvf"
-    dest_flag = "-C %s" % dest
     if not os.path.exists(dest):
         os.makedirs(dest)
 
     # Make moves
-    tar(ops_flags, file_name, dest_flag)
+    tar(ops_flags, file_name, "-C", dest)
 
     if len(os.listdir(dest)) is 1:
         # somewhat properly packaged tarball
