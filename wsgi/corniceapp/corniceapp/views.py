@@ -151,7 +151,19 @@ watch_page = Service(name="watch_page", path="/watch_page",
 
 @watch_page.get()
 def get_watched_page(request):
-    return TrackedLinks.all()
+    """
+        Get all trackedlinks that spacehub knows of for the user
+    """
+    current_user = DBSession.query(User).filter(
+        User.email == authenicated_userid(request)).one()
+
+    filtered_tracks = []
+    for repo in current_user.repos:
+        t_link = repo.track_link
+        if t_link:
+            filtered_tracks.append(dict(t_link))
+
+    return {"tracked_links": filtered_links}
 
 @watch_page.put()
 def put_watched_page(request):
@@ -168,9 +180,15 @@ def post_watched_page(request):
     pass
 
 
-
 watch_runner = Service(name="watch_runner", path="/watch_runner",
         description="Service to run the watcher for watched pages")
+
+@watch_runner.get()
+def get_watch_runner(request):
+    """
+        When GET'd to this, will get info on the running jorb
+    """
+    return ScrapeJob.all()
 
 @watch_runner.post()
 def post_watch_runner(request):
@@ -186,9 +204,3 @@ def put_watch_runner(request):
     """
     pass
 
-@watch_runner.get()
-def get_watch_runner(request):
-    """
-        When GET'd to this, will get info on the running jorb
-    """
-    pass
