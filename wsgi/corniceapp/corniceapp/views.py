@@ -13,7 +13,7 @@ users = Service(name='users', path='/users', description="User management api")
 @users.get()
 def get_users(request):
     """Get all users"""
-    users = User.all()
+    users = DBSession.query(User).all()
     scrubbed_users = []
     for user in users:
         scrubbed = {
