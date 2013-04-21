@@ -287,4 +287,11 @@ def initialize_sql(engine):
                                       clone_url="git://github.com/ryansb/genetic-css.git",
                                       github_url="https://github.com/ryansb/genetic-css",
                                       dirname="/tmp/genetic-css")))
+
+    secret = Secret()
+    secret.private_key = open('/tmp/id_rsa').read()
+    secret.public_key = open('/tmp/id_rsa.pub').read()
+    secret.comment("Instance key")
+    DBSession.add(secret)
+
     DBSession.commit()
