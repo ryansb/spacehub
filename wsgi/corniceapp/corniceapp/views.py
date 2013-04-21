@@ -57,7 +57,7 @@ def get_users(request):
     for user in users:
         scrubbed = {
             "username": user.name,
-            "repos": user.repos
+            "repos": user.repos.to_dict()
         }
         scrubbed_users.append(scrubbed)
     return {"users": scrubbed_users}
