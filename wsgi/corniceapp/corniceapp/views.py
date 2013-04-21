@@ -120,17 +120,20 @@ def delete_key(request):
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
               "the addition/deletion of repositories")
+repo_param = Service(name='repo', path='/repo/{rid}', description="Service to "
+                     "deal with the addition/deletion of repositories")
 
 @repo.get()
 def get_repos(request):
     return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
 
 
-@repo.put()
+@repo_param.put()
 def put_repo(request):
     """
         To edit an existing repository
     """
+    print request.matchdict['rid']
     pass
 
 
