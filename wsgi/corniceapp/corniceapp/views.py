@@ -165,3 +165,20 @@ def post_watched_page(request):
     """
     pass
 
+
+watch_runner = Service(name="watch_runner", path="/watch_runner",
+        description="Service to run the watcher for watched pages")
+
+@watch_runner.post()
+def post_watch_runner(request):
+    """
+        When POSTED to this will start operating on watched pages
+    """
+    pass
+
+@watch_runner.get()
+def get_watch_runner(request):
+    """
+        When GET'd to this, will get info on the running jorb
+    """
+    pass
