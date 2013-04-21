@@ -18,6 +18,7 @@ class HandlerMeta(type):
 
     @classmethod
     def register(mcs, cls, ext):
+        print "Handle Register: %s for extension '%s'" % (cls.__name__, ext)
         mcs.meta_handlers[ext] = cls()
 
     @classmethod
