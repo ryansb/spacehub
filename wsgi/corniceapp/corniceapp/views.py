@@ -179,6 +179,13 @@ def post_watch_runner(request):
     """
     pass
 
+@watch_runner.put()
+def put_watch_runner(request):
+    """
+        Update the runner's status.
+    """
+    pass
+
 @watch_runner.get()
 def get_watch_runner(request):
     """
