@@ -52,10 +52,13 @@ setup(name='corniceapp',
         'zope.sqlalchemy',
         'WebError',
         'GitPython',
+        'PasteDeploy',
     ],
     entry_points = """\
     [paste.app_factory]
     main = corniceapp:main
+    [console_scripts]
+    spacehub_cron = corniceapp.bin.cron:update_repos
     """,
     paster_plugins=['pyramid'],
 )
