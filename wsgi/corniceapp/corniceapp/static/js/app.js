@@ -92,12 +92,14 @@ App.NewRepoController = Ember.Controller.extend({
 		var github_repo = $("#repo-github-name").val();
 		var source_url = $("#repo-source-url").val();
 		var source_type = $('input[name=repo-source-type]:checked').val();
+		var link_text = $('#repo-link-text').val();
 		body = {
 			"name": name,
 			"github_uname": github_uname,
 			"github_repo": github_repo,
 			"source_url": source_url,
-			"source_type": source_type
+			"source_type": source_type,
+			"link_text": link_text
 		};
 		$.ajax({
 			url: "/repo",
@@ -122,12 +124,14 @@ App.RepoController = Ember.ObjectController.extend({
 		var github_repo = $("#repo-github-name").val();
 		var source_url = $("#repo-source-url").val();
 		var source_type = $('input[name=repo-source-type]:checked').val();
+		var link_text = $('#repo-link-text').val();
 		body = {
 			"name": name,
 			"github_uname": github_uname,
 			"github_repo": github_repo,
 			"source_url": source_url,
-			"source_type": source_type
+			"source_type": source_type,
+			"link_text": link_text
 		};
 		$.ajax({
 			url: "/repo/" + controller.content.id,
