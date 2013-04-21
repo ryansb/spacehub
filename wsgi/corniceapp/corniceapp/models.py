@@ -67,6 +67,18 @@ class Repo(_Base):
         return r
 
 
+class TrackedLinks(_Base):
+    __tablename__ = 'tracked_links'
+
+    id = Column(Integer, primary_key=True)
+    url = Column(String)
+    name = Column(String)
+    last_accessed = Column(DateTime())
+    modified = Column(DateTime())
+    link_text = Column(Unicode)
+    repo_id = Column(Integer, ForeignKey('repos.id'))
+
+
 def initialize_sql(engine):
     import hashlib
     DBSession.configure(bind=engine)
