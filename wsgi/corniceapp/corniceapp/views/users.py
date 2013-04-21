@@ -1,16 +1,13 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, Repo, DBSession
+from corniceapp.models import User, DBSession
 from corniceapp.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
-    remember,
-    forget,
 )
 from webob import Response
 import hashlib
-import json
 
 
 users = Service(name='users', path='/users', description="User management api")
@@ -25,6 +22,7 @@ def get_users(request):
         scrubbed = {
             "username": user.name,
             "repos": [r.to_dict() for r in user.repos],
+            "apikeys": [a.apikey for a in user.apikeys],
         }
         scrubbed_users.append(scrubbed)
     return {"users": scrubbed_users}
