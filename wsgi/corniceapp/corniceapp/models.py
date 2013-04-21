@@ -75,7 +75,7 @@ class Repo(_Base):
 
     def clone(self):
         print "Setting clone job"
-        subprocess.check_call(["clone", self.clone_url, repo_path + self.path])
+        subprocess.check_call(["clone", self.clone_url, repo_path + self.dirname])
         return True
 
     def push(self):
@@ -84,7 +84,7 @@ class Repo(_Base):
         return True
 
     def commit_a(self, message):
-        cmd = 'cd %s && git add . && git commit -am "%s"' % (repo_path + self.path, message)
+        cmd = 'cd %s && git add . && git commit -am "%s"' % (repo_path + self.dirname, message)
         subprocess.check_call(cmd.split(' '))
         return True
 
