@@ -2,9 +2,14 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>Spacehub: Put Your Projects Into Orbit</title>
+		<title>Spacehub: Send Your Projects Into Orbit</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<!-- <link href="css/journal.min.css" rel="stylesheet"> -->
+		<link rel="shortcut icon" href="images/favicon.ico">
+		<!-- Loading Bootstrap -->
 		<link href="css/journal.min.css" rel="stylesheet">
+		<!-- Loading Flat UI -->
+		<!-- <link href="css/flat-ui.css" rel="stylesheet"> -->
 		<link rel="shortcut icon" href="images/favicon.ico">
 		<!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
 		<!--[if lt IE 9]>
@@ -27,6 +32,35 @@
 					{{ outlet }}
 				</div>
 			</div>	
+		</script>
+		<script type="text/x-handlebars" data-template-name="index">
+			<div class="hero-unit">
+			  <h1>Spacehub</h1>
+			  <p>Send Your Projects Into Orbit</p>
+			  <p>
+			    <a href="#/signup" class="btn btn-primary btn-large">
+			      Sign in or Sign up
+			    </a>
+			  </p>
+			</div>
+			<div class="row">
+				<div class="span3 well">
+					<h2>A Callout Box</h2>
+					<p>Got some text and stuff.</p>
+				</div>
+				<div class="span3 well">
+					<h2>A Callout Box</h2>
+					<p>Got some text and stuff.</p>
+				</div>
+				<div class="span3 well">
+					<h2>A Callout Box</h2>
+					<p>Got some text and stuff.</p>
+				</div>
+				<div class="span3 well">
+					<h2>A Callout Box</h2>
+					<p>Got some text and stuff.</p>
+				</div>
+			</div>
 		</script>
 		<script type="text/x-handlebars" data-template-name="user">
 			<div class="offset1 span5 well">
@@ -86,24 +120,23 @@
 				</div>
 				<div class="span10 well">
 					<h2>Project Dashboard</h2>
-					{{#if controller}}
-					<ul class="repo-list">
+					<ul class="list">
 							{{#each repo in controller}}
-								<li class="repo inline-block">{{#linkTo repo repo}}
+								<li class="repo inline-block">
+								{{#linkTo repo repo}}
 									<div class="row">
-										<div class="span2">
+										<div class="span6">
 											<div class="repo-icon fui-settings-24"></div>
-											<h4 class="repo-name inline">{{box.name}}</h4>
+											<h4 class="repo-name inline">{{repo.name}}</h4>
+											<h5 class="repo-type">{{repo.github_url}}</h5>
 										</div>
 										<div class="span5">
 										</div>
-									</div>		
-								{{/linkTo}}</li>
+									</div>
+								{{/linkTo}}
+								</li>
 							{{/each}}
 					</ul>
-					{{else}}
-					<p>You are not currently managing any projects. Add managed projects from the toolbar.</p>
-					{{/if}}
 				</div>
 			</div>
 		</script>
@@ -128,6 +161,26 @@
 								</div>
 							</div>
 							<div class="control-group">
+								<div class="controls">
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-1" value="tar" checked>
+										Tarball
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-2" value="git">
+										Git
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-3" value="hg">
+										Mercurial
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-4" value="svn">
+										SVN
+									</label>
+								</div>
+							</div>
+							<div class="control-group">
 							    <label class="control-label" for="repo-source-url">Project Source URL</label>
 								<div class="controls">
 									<input type="text" class="repo-source-url" name="repo-source-url" id="repo-source-url" placeholder="e.g. http://www.example.org/dev/projects/repo.tar.gz" required>
@@ -148,6 +201,73 @@
 						</fieldset>
 						<div class="control-group">
 							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-primary">Sync Project with Github</button>
+						</div>
+					</form>
+
+				</div>
+			</div>			
+		</script>
+		<script type="text/x-handlebars" data-template-name="repo">
+			<div class="row">
+				<div class="offset2 span4">
+					<h2>Sync a Project</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sidebar span2">
+					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
+				</div>
+				<div class="span10">
+					<form class="form-horizontal" id="create-repo-form" {{action "putRepo" on="submit"}}>
+						<fieldset>
+							<legend>Changing Project Settings</legend>
+							<div class="control-group">
+							    <label class="control-label" for="box-name">Project Name</label>
+								<div class="controls">
+									<input type="text" class="repo-name" name="name" id="repo-name" {{bindAttr value="name"}} required>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls">
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-1" value="tar">
+										Tarball
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-2" value="git">
+										Git
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-3" value="hg">
+										Mercurial
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-4" value="svn">
+										SVN
+									</label>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-source-url">Project Source URL</label>
+								<div class="controls">
+									<input type="text" class="repo-source-url" name="repo-source-url" id="repo-source-url" {{bindAttr value="source_url"}} required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-github-user">Destination Github URL</label>
+								<div class="controls">
+									<input type="text" class="repo-github-user" name="repo-github-user" id="repo-github-user" {{bindAttr value="github_user"}} required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-github-name">Destination Github Repository</label>
+								<div class="controls">
+									<input type="text" class="repo-github-name" name="repo-github-name" id="repo-github-name" {{bindAttr value="github_repo"}} required>
+								</div>
+							</div>
+						</fieldset>
+						<div class="control-group">
+							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-primary">Save Changes</button>
 						</div>
 					</form>
 

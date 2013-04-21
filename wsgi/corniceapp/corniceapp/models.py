@@ -63,9 +63,14 @@ class Repo(_Base):
     created_at = Column(DateTime())
     last_updated = Column(DateTime())
     source_url = Column(Text())
-    github_url = Column(Text())
+    github_uname = Column(Text())
+    github_repo = Column(Text())
     clone_url = Column(Text())
     dirname = Column(Text())
+
+    @property
+    def github_url(self):
+        return "git@github.com:%s/%s.git" % (self.github_uname, self.github_repo)
 
     def to_dict(self):
         return dict(
@@ -75,6 +80,8 @@ class Repo(_Base):
             created_at=self.created_at.strftime("%D %H:%M"),
             last_updated=self.last_updated.strftime("%D %H:%M"),
             source_url=self.source_url,
+            github_uname=self.github_uname,
+            github_repo=self.github_repo,
             github_url=self.github_url,
             clone_url=self.clone_url,
             dirname=self.dirname
@@ -88,7 +95,8 @@ class Repo(_Base):
         r.created_at = datetime.now()
         r.last_updated = datetime.now()
         r.source_url = new.get('source_url')
-        r.github_url = new.get('github_url')
+        r.github_uname = new.get('github_uname')
+        r.github_repo = new.get('github_repo')
         r.clone_url = new.get('clone_url')
         r.dirname = new.get('dirname')
         return r
