@@ -70,7 +70,7 @@ class Repo(_Base):
 
     @property
     def github_url(self):
-        return "git@github.com:%s/%s.git" % (github_uname, github_repo)
+        return "git@github.com:%s/%s.git" % (self.github_uname, self.github_repo)
 
     def to_dict(self):
         return dict(
