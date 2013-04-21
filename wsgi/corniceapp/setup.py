@@ -35,6 +35,7 @@ setup(name='corniceapp',
         'zope.sqlalchemy',
         'WebError',
         'sh',
+        'BeautifulSoup'
     ],
     entry_points = """\
     [paste.app_factory]
