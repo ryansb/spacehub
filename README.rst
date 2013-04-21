@@ -1,5 +1,5 @@
 SpaceHub
-======================================
+========
 
 SpaceHub is an open-source scraper for code located on Sourceforge, in SVN, or
 just in a tarball somewhere.
@@ -14,7 +14,7 @@ Features
 * MySQL database automatically setup for your application
 
 Get Started
-------------------
+-----------
 ::
 
     rhc app create spacehub python-2.7
