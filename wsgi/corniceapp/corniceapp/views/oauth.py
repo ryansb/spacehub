@@ -1,5 +1,5 @@
 from cornice import Service
-from cornice.models import DBSession, Secret
+from corniceapp.models import DBSession, Secret
 from pyramid.httpexceptions import HTTPTemporaryRedirect
 from github import Github
 import requests
