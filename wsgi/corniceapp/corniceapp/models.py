@@ -3,6 +3,8 @@ from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boo
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from datetime import datetime
 
+from uuid import uuid4
+from datetime import datetime
 
 _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
@@ -67,7 +69,7 @@ class Repo(_Base):
         return r
 
 
-class TrackedLinks(_Base):
+class TrackedLink(_Base):
     __tablename__ = 'tracked_links'
 
     id = Column(Integer, primary_key=True)
@@ -77,6 +79,14 @@ class TrackedLinks(_Base):
     modified = Column(DateTime())
     link_text = Column(Unicode)
     repo_id = Column(Integer, ForeignKey('repos.id'))
+
+
+class ScrapeJob(_Base):
+    __tablename__ = 'watch_jobs'
+
+    id = Column(String(36), default=(lambda: str(uuid4())), primary_key=True)
+    starttime = Column(DateTime(), default=(lambda: datetime.now()))
+    status = Column(Integer)
 
 
 def initialize_sql(engine):
