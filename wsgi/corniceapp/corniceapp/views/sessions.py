@@ -46,7 +46,7 @@ def login_user(request):
     password = hashlib.sha512(request.validated['password']).hexdigest()
     username = request.validated['username']
     user = DBSession.query(User).filter(User.name==username).one()
-    if user.password == password:
+    if user and user.password == password:
         headers = remember(request, user.email)
         resp = Response(json.dumps({"success": True}))
         resp.headerlist.extend(headers)
@@ -97,7 +97,8 @@ def delete_key(request):
         privs: logged in, admin
         {"username": "user", "key": "dat-key"}
     """
-    if request.validated['ValidUser']:
+    cur_user = request.validated['ValidUser']
+    if cur_user:
         target_user = DBSession.query(User).filter(
             User.name==request.validated['username']).one()
         if target_user == cur_user or cur_user.admin:
