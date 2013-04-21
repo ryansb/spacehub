@@ -10,7 +10,7 @@ class HandlerMeta(type):
         if 'file_ext' not in dct:
             raise AttributeError("Need a file_ext")
 
-        ins = type.__new__(cls, name, bases, dct)
+        ins = type.__new__(mcs, name, bases, dct)
 
         mcs.register(ins, dct['file_ext'])
 
@@ -62,12 +62,25 @@ class GZipFileHandler(FileHandlerBase):
         from sh import gunzip
 
 
+
+def tgz_handle(self, file_name, dest):
+    from sh import tar
+
+
 class TarGZipFileHandler(FileHandlerBase):
     file_ext = "tar.gz"
-
-    def handle(self, file_name, dest):
-        from sh import tar
+    handle = tgz_handle
 
 
-class TgzFileHandler(TarGZipFileHandler):
+class TgzFileHandler(FileHandlerBase):
     file_ext = "tgz"
+    handle = tgz_handle
+
+
+def handle_file(file_name, dest):
+    handler = HandlerMeta.get_handler_by_filename(file_name)
+    handler.handle(file_name, dest)
+
+    return dest
+
+__all__ = ['handle_file']

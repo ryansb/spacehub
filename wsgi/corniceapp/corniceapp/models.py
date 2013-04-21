@@ -4,6 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from datetime import datetime
 import subprocess
 import git
+from handler import handle_file
 
 from uuid import uuid4
 from datetime import datetime
@@ -116,6 +117,7 @@ class TrackedLink(_Base):
             repo=self.repo_id
         )
 
+    @classmethod
     def from_dict(cls, new):
         t = TrackedLink()
         t.repo_id = new.get('repo_id')
@@ -123,6 +125,19 @@ class TrackedLink(_Base):
         t.url = new.get('url')
         t.link_text = new.get('link_text')
         return t
+
+    def retrive(self):
+        tmp_dir = path.join(
+            self.repo.destdir,
+            "../.recv-%s/" % (
+                hashlib.md5("repo:%i link:%i" % (self.repo.id, self.id)
+                ).hexdigest())
+            )
+        print "Temp Directory: %s" % tmp_dir
+
+        
+        ret_dir = handle_file(downed_file, tmp_dir)
+
 
 
 class ScrapeJob(_Base):
