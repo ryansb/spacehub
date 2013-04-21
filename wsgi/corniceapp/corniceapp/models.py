@@ -85,8 +85,7 @@ class Repo(_Base):
 
     def commit_a(self, message):
         #cmd = r'bash -c "cd %s && git add . && git commit -am \"%s\""' % (self.dirname, message)
-        cmd = r'cd %s && git add . && git commit -am "%s"' % (self.dirname, message)
-        cmd = r'cd %s && git commit -am "%s"' % (self.dirname, message)
+        cmd = r'cd %s && git add . && git commit -am "%s" --author=NASABOT' % (self.dirname, message)
         print cmd
         subprocess.check_call(cmd.split(' '))
         return True
