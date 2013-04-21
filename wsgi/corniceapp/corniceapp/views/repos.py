@@ -41,10 +41,26 @@ def commit_repo(request):
     if cur_user:
         print request.matchdict['rid']
         print request.matchdict['rid']
-        r = DBSession.query(Repo).filter(Repo.id==1).first()
+        r = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid']).first()
         if r.owner_id == cur_user.id or cur_user.admin:
             r.commit_a(request.json.get("message"))
-            return "yupyup"
+            return {"success": True}
+    raise _401()
+
+
+@repo_act.post(validators=valid_user)
+def push_repo(request):
+    """
+        Push changes to this repo to a remote
+    """
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        repos = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid'])
+        if repos.count() > 0:
+            repo = repos.first()
+            if repo.owner_id == cur_user.id or cur_user.admin:
+                repo.push()
+                return {"success": True}
     raise _401()
 
 
@@ -59,7 +75,7 @@ def clone_repo(request):
         r = DBSession.query(Repo).filter(Repo.id==1).first()
         if r.owner_id == cur_user.id or cur_user.admin:
             r.clone()
-            return "lololol"
+            return {"success": True}
     raise _401()
 
 
