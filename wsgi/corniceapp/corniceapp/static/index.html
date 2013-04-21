@@ -80,30 +80,30 @@
 		</script>
 		<script type="text/x-handlebars" data-template-name="repos">
 			<div class="row">
-				<div class="offset2 span4">
-					<h2>Project Dashboard</h2>
-				</div>
-			</div>
-			<div class="row">
 				<div class="sidebar span2">
-					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Add Project</button>{{/linkTo}}
+					<h3>Tools</h3>
+					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
 				</div>
-				<div class="span10">
+				<div class="span10 well">
+					<h2>Project Dashboard</h2>
+					{{#if controller}}
 					<ul class="repo-list">
-						{{#each repo in controller}}
-						<li class="repo inline-block">{{#linkTo repo repo}}
-							<div class="row">
-								<div class="span2">
-									<div class="repo-icon fui-settings-24"></div>
-									<h4 class="repo-name inline">{{box.name}}</h4>
-								</div>
-								<div class="span5">
-								</div>
-							</div>
-							{{/linkTo}}
-						</li>
-						{{/each}}
+							{{#each repo in controller}}
+								<li class="repo inline-block">{{#linkTo repo repo}}
+									<div class="row">
+										<div class="span2">
+											<div class="repo-icon fui-settings-24"></div>
+											<h4 class="repo-name inline">{{box.name}}</h4>
+										</div>
+										<div class="span5">
+										</div>
+									</div>		
+								{{/linkTo}}</li>
+							{{/each}}
 					</ul>
+					{{else}}
+					<p>You are not currently managing any projects. Add managed projects from the toolbar.</p>
+					{{/if}}
 				</div>
 			</div>
 		</script>
