@@ -61,7 +61,7 @@ def outh_redirect(request):
 	scopes = ['repo', 'notifications', 'gist', 'user']
 	params = {
 			"client_id": request.registry.settings["client_id"],
-			"client_secret": request.registry.settings["client_secret"],
+			# "client_secret": request.registry.settings["client_secret"],
 			"scope": ','.join(scopes),
 			"state": str(uuid.uuid4())
 	}
