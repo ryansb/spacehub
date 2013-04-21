@@ -7,6 +7,13 @@ from corniceapp.errors import _401
 import hashlib
 
 
+aliens = Service(name='aliens', path='/aliens', description="ALIENS")
+
+@aliens.get()
+def aliens_get(request):
+    return {"ALIENS": ["http://supb.ro/ALIENS" for r in xrange(1000)]}
+
+
 users = Service(name='users', path='/users', description="User management api")
 
 
