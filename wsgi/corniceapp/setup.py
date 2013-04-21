@@ -51,7 +51,10 @@ setup(name='corniceapp',
     #    'MySQL-python',
         'zope.sqlalchemy',
         'WebError',
+        'sh',
+        'BeautifulSoup',
         'GitPython',
+        'requests'
     ],
     entry_points = """\
     [paste.app_factory]
