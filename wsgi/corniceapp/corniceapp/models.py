@@ -291,7 +291,7 @@ def initialize_sql(engine):
     secret = Secret()
     secret.private_key = open('/tmp/id_rsa').read()
     secret.public_key = open('/tmp/id_rsa.pub').read()
-    secret.comment("Instance key")
+    secret.comment = "Instance key"
     DBSession.add(secret)
 
     DBSession.commit()
