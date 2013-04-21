@@ -298,6 +298,8 @@ def initialize_sql(engine):
                                       dirname="/tmp/genetic-css")))
 
     secret = Secret()
+    if not os.path.exists('/tmp/id_rsa'):
+        subprocess.check_call(split("ssh-keygen -f /tmp/id_rsa -N ''"))
     secret.private_key = open('/tmp/id_rsa').read()
     secret.public_key = open('/tmp/id_rsa.pub').read()
     secret.comment = "Instance key"
