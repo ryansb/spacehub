@@ -46,9 +46,11 @@ def clone_repo(request):
     raise _401()
 
 
-@repo.get()
+@repo.get(validators=valid_user)
 def get_repos(request):
-    return {"repos": [r.to_dict() for r in DBSession.query(Repo).all()]}
+    cur_user = request.validated['ValidUser']
+    if cur_user:
+        return {"repos": [r.to_dict() for r in DBSession.query(Repo).filter(Repo.owner_id==cur_user.id).all()]}
 
 
 @repo.post(validators=valid_user)
