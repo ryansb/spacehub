@@ -30,9 +30,9 @@ def valid_user(request):
             loggedin_user = DBSession.query(User).filter(User.email==email).one()
         except:
             loggedin_user = None
+        request.validated['ValidUser'] = loggedin_user
         if loggedin_user:
-            request.validated['ValidUser'] = loggedin_user
-            request.validated['isAdmin'] = loggedin_user.admin
+            print("User: " + loggedin_user.name + " " + str(loggedin_user.id))
 
 
 def validate_generic(request):

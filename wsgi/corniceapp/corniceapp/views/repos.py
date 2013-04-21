@@ -84,6 +84,8 @@ def get_repos(request):
     cur_user = request.validated['ValidUser']
     if cur_user:
         return {"repos": [r.to_dict() for r in DBSession.query(Repo).filter(Repo.owner_id==cur_user.id).all()]}
+    else:
+        raise _401()
 
 
 @repo.post(validators=valid_user)
@@ -93,8 +95,9 @@ def post_repo(request):
     """
     cur_user = request.validated['ValidUser']
     if cur_user:
-        r = Repo.from_dict(request.json)
-        r.user_id = cur_user.id
+        data = dict(request.json)
+        data.update({'owner_id': cur_user.id})
+        r = Repo.from_dict(data)
         DBSession.add(r)
         DBSession.commit()
         return r.to_dict()
