@@ -18,6 +18,7 @@
 """
 
 from webob import Response, exc
+import json
 
 
 class _401(exc.HTTPError):
