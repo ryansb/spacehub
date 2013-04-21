@@ -31,7 +31,11 @@ def main(global_config, **settings):
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.add_static_view('/app', 'static', cache_max_age=3600)
-    config.add_view(lambda r: Response('<a href="http://supb.ro/ALIENS">ALIENS</a> not found.', status=404), context='pyramid.httpexceptions.HTTPNotFound')
+    config.add_view(lambda r: Response('We didn not find your page. We did '
+                                       'find <a '
+                                       'href="http://supb.ro/ALIENS">ALIENS</a>',
+                                       status=404),
+                    context='pyramid.httpexceptions.HTTPNotFound')
     config.include("cornice")
     config.scan("corniceapp.views")
     engine = create_engine(db_url)
