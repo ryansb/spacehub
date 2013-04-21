@@ -116,7 +116,16 @@ class Repo(_Base):
         return "git@github.com:%s/%s.git" % (self.github_uname, self.github_repo)
 
     def to_dict(self):
-        return dict(
+        ret = {}
+
+        try:
+            r = git.Repo(self.dirname)
+            ret['last_commit'] = r.git.log("--oneline -n1")
+        except:
+            ret['last_commit'] = "No commits yet..."
+            pass
+
+        ret.update(dict(
             id=self.id,
             owner_id=self.owner_id,
             name=self.name,
@@ -129,8 +138,9 @@ class Repo(_Base):
             clone_url=self.clone_url,
             dirname=self.dirname,
             source_type=self.source_type,
-            link_text=self.link_text
-        )
+            link_text=self.link_text,
+        ))
+        return ret
 
     @classmethod
     def from_dict(cls, new):
