@@ -52,7 +52,7 @@ setup(name='corniceapp',
         'zope.sqlalchemy',
         'WebError',
         'sh',
-        'BeautifulSoup',
+        'BeautifulSoup4',
         'GitPython',
         'requests'
     ],
