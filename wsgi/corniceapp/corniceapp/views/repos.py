@@ -37,6 +37,8 @@ def put_repo(request):
         To edit an existing repository
     """
     print request.matchdict['rid']
+    r = DBSession.query(Repo).filter(Repo.id==1).first()
+    r.clone()
     pass
 
 

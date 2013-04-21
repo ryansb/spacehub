@@ -75,7 +75,6 @@ class Repo(_Base):
 
     def clone(self):
         print "Setting clone job"
-        git()
         subprocess.check_call(["clone", self.clone_url, repo_path + self.path])
         return True
 
@@ -98,4 +97,9 @@ def initialize_sql(engine):
     _Base.metadata.drop_all()
     _Base.metadata.create_all(engine, checkfirst=False)
     DBSession.add(User(name="admin", password=hashlib.sha512("password").hexdigest(), admin=True, email="admin@spacehub.com"))
+    DBSession.add(Repo.from_dict(dict(name="genetic-css", owner_id=1,
+                                      source_url="sourceforge.com/lololol",
+                                      clone_url="git://github.com/ryansb/genetic-css.git",
+                                      github_url="https://github.com/ryansb/genetic-css",
+                                      dirname="genetic-css")))
     DBSession.commit()
