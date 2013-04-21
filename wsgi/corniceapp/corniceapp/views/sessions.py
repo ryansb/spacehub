@@ -79,7 +79,8 @@ def create_key(request):
     """
     cur_user = get_logged_in_user(request)
     if cur_user:
-        target_user = DBSession.query(User).filter(name=request.validated['username']).one()
+        target_user = DBSession.query(User).filter(
+            name=request.validated['username']).one()
         if target_user.name == cur_user or cur_user.admin:
             key = gen_apikey()
             newAPIKey = APIKey(apikey=key,ownerid=target_user.id)
@@ -93,5 +94,16 @@ def delete_key(request):
     """
         Delete an api key
         privs: logged in, admin
+        {"username": "user", "key": "dat-key"}
     """
-    pass
+    cur_user = get_logged_in_user(request)
+    if cur_user:
+        target_user = DBSession.query(User).filter(
+            name=request.validated['username']).one()
+        if target_user == cur_user or cur_user.admin:
+            key = DBSession.query(APIKey).filter(
+                apikey=request.validated['key']).one()
+            DBSession.delete(key)
+            return {"success": True}
+    return {"success": False}
+
