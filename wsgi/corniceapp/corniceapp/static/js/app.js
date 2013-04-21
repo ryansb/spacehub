@@ -288,7 +288,7 @@ App.Repo.reopenClass({
 $.ajaxSetup({
 	statusCode: {
 		401: function () {
-			window.location.href = "app/index.html#/signup";
+			window.location.href = "index.html#/signup";
 			App.set('authorized', false);
 		}
 	}
