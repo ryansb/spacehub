@@ -87,11 +87,11 @@ class Repo(_Base):
         #cmd = r'bash -c "cd %s && git add . && git commit -am \"%s\""' % (self.dirname, message)
         cmd = r'cd %s && git add . && git commit -am "%s"' % (self.dirname, message)
         print cmd
-        trye:
+        try:
             subprocess.check_call(cmd.split(' '))
         except OSError, e:
             import os
-            raise Exception(e.message + " EXXX " os.path.exists(self.dirname))
+            raise Exception(e.message + " EXXX " + str(os.path.exists(self.dirname)))
         return True
 
 
