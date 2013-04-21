@@ -29,8 +29,8 @@
 				</div>
 			</div>	
 		</script>
-		<script type="text/x-handlebars" data-template-name="signup">
-			<div class="offset1 span5">
+		<script type="text/x-handlebars" data-template-name="user">
+			<div class="offset1 span5 well">
 				<h2>New User</h2>
 				<form class="login-form" id="signup-form" {{action postUser on="submit"}}>
 					<div class="control-group" id="username-control">
@@ -41,7 +41,7 @@
 					</div>
 					<div class="control-group" id="email-control">
 						<div class="controls">
-							<input type="email" class="email-field" name="email" id="phone" placeholder="Email Address">
+							<input type="email" class="email-field" name="email" id="email" placeholder="Email Address">
 							<span class="help-inline" id="email-help"></span>
 						</div>
 					</div>
@@ -60,7 +60,7 @@
 					</div>
 				</form>
 			</div>
-			<div class="span5">
+			<div class="span5 well">
 				<h2>Returning User</h2>
 				<form class="login-form" id="login-form" {{action login on="submit"}}>
 					<div class="control-group" id="login-control">

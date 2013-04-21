@@ -31,7 +31,7 @@ App.Router.map(function () {
 	this.route("about", {
 		path: "/about"
 	});
-	this.route("indedx", {
+	this.route("index", {
 		path: "/"
 	});
 	this.resource("user", {
@@ -128,11 +128,17 @@ App.UserController = Ember.Controller.extend({
 			App.insertErrorMessage("#password-help", "Your password entries don't match. Check your spelling?");
 		}
 
+		var body = {
+			"username": user,
+			"email": email, 
+			"password": pwd1
+		}
+
 		if (!errors) {
 			$.ajax({
 				url: "/users",
 				type: "POST",
-				data: $("#signup-form").serialize(),
+				data: JSON.stringify(body),
 				success: function (response) {
 					controller.transitionToRoute("dashboard");
 					console.log("Successfully created user.");
