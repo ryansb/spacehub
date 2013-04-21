@@ -31,11 +31,12 @@ setup(name='corniceapp',
         'PasteScript',
         'waitress',
         'sqlalchemy',
-        'MySQL-python',
+    #    'MySQL-python',
         'zope.sqlalchemy',
         'WebError',
         'sh',
         'BeautifulSoup'
+        'GitPython',
     ],
     entry_points = """\
     [paste.app_factory]
