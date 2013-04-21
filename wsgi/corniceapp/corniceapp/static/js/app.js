@@ -40,6 +40,12 @@ App.Router.map(function () {
 	this.resource("repo", {
 		path: "/repo/:repo_id"
 	});
+	this.resource("repos", {
+		path: "/repos"
+	});
+	this.resource("newRepo", {
+		path: "/new/repo"
+	});
 });
 //
 // Routes
@@ -59,19 +65,53 @@ App.RepoRoute = Ember.Route.extend({
 //
 // Controllers
 //
+App.NewRepoController = Ember.Controller.extend({
+	postRepo: function postRepo() {
+		var controller = this;
+		console.log("Creating repo.");
+
+		var name = $("#repo-name").val();
+		var github_url = "https://www.github.com/" + $("#repo-github-user").val() + "/" + $("#repo-github-name").val();
+		var source_url = $("#repo-source-url").val();
+		body = {
+			"name": name,
+			"github_url": github_url,
+			"source_url": source_url
+		};
+		$.ajax({
+			url: "/new/repo",
+			type: "POST",
+			data: JSON.stringify(body),
+			success: function (response) {
+				console.log("Successfully created repo.");
+			},
+			error: function (response) {
+				console.log("Failed to create repo.");
+			}
+		});
+	}
+});
 App.RepoController = Ember.ObjectController.extend({
 	putRepo: function putRepo() {
 		var controller = this;
 		console.log(controller);
 		console.log("Saving Repo.");
+		var name = $("#repo-name").val();
+		var github_url = "https://www.github.com/" + $("#repo-github-user").val() + "/" + $("#repo-github-name").val();
+		var source_url = $("#repo-source-url").val();
+		body = {
+			"name": name,
+			"github_url": github_url,
+			"source_url": source_url
+		};
 		$.ajax({
 			url: "/repo/" + controller.content.id,
 			type: "PUT",
-			data: $("#repo-form").serialize(),
+			data: JSON.stringify(body),	
 			success: function (response) {
 				console.log("Successfully saved repo.");
 				controller.set('content', App.Repo.findAll());
-				controller.transitionToRoute("dashboard");
+				controller.transitionToRoute("repos");
 			},
 			error: function (response) {
 				console.log("Failed to save repo.");
@@ -176,7 +216,7 @@ App.UserController = Ember.Controller.extend({
 		return false;
 	}
 });
-App.DashboardController = Ember.ArrayController.extend({});
+App.ReposController = Ember.ArrayController.extend({});
 App.ApplicationController = Ember.Controller.extend({
 	logout: function logout() {
 		var app = this;

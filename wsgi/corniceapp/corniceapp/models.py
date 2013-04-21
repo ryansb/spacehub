@@ -2,10 +2,16 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from datetime import datetime
+from shlex import split
+import subprocess
+import git
+import os.path
 
 
 _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
+
+repo_path = "/tmp/"
 
 
 class User(_Base):
@@ -41,7 +47,8 @@ class Repo(_Base):
     last_updated = Column(DateTime())
     source_url = Column(Text())
     github_url = Column(Text())
-    path = Column(Text())
+    clone_url = Column(Text())
+    dirname = Column(Text())
 
     def to_dict(self):
         return dict(
@@ -51,7 +58,8 @@ class Repo(_Base):
             last_updated=self.last_updated.strftime("%D %H:%M"),
             source_url=self.source_url,
             github_url=self.github_url,
-            path=self.path
+            clone_url=self.clone_url,
+            dirname=self.dirname
         )
 
     @classmethod
@@ -63,8 +71,32 @@ class Repo(_Base):
         r.last_updated = datetime.now()
         r.source_url = new.get('source_url')
         r.github_url = new.get('github_url')
-        r.path = new.get('pat')
+        r.clone_url = new.get('clone_url')
+        r.dirname = new.get('dirname')
         return r
+
+    def clone(self):
+        print "Setting clone job"
+        print ["git", "clone", self.clone_url, self.dirname]
+        subprocess.check_call(["git", "clone", self.clone_url, self.dirname])
+        return True
+
+    def push(self):
+        print "Setting push job"
+        subprocess.check_call(split('cd {0} && git push --all origin').format(self.dirname))
+        return True
+
+    def commit_a(self, message):
+        if not os.path.exists(self.dirname):
+            self.clone()
+        r = git.Repo(self.dirname)
+        r.git.add(os.path.join(self.dirname, "*"))
+        try:
+            r.git.commit('-m "%s"' % message)
+        except:
+            return False
+        return True
+
 
 
 def initialize_sql(engine):
@@ -74,4 +106,9 @@ def initialize_sql(engine):
     _Base.metadata.drop_all()
     _Base.metadata.create_all(engine, checkfirst=False)
     DBSession.add(User(name="admin", password=hashlib.sha512("password").hexdigest(), admin=True, email="admin@spacehub.com"))
+    DBSession.add(Repo.from_dict(dict(name="genetic-css", owner_id=1,
+                                      source_url="sourceforge.com/lololol",
+                                      clone_url="git://github.com/ryansb/genetic-css.git",
+                                      github_url="https://github.com/ryansb/genetic-css",
+                                      dirname="/tmp/genetic-css")))
     DBSession.commit()
