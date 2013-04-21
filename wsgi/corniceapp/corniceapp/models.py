@@ -91,7 +91,10 @@ class Repo(_Base):
             self.clone()
         r = git.Repo(self.dirname)
         r.git.add(os.path.join(self.dirname, "*"))
-        r.git.commit('-am "%s"' % message)
+        try:
+            r.git.commit('-m "%s"' % message)
+        except:
+            return False
         return True
 
 
