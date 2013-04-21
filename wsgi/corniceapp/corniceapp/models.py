@@ -153,6 +153,8 @@ class TrackedLink(_Base):
         print "About to process %s" % file_name
         ret_dir = handle_file(downed_file, tmp_dir)
 
+        return ret_dir
+
     def get_dl_link(self):
         base, junk = path.split(self.url)
         page = urllib2.urlopen(self.url)
