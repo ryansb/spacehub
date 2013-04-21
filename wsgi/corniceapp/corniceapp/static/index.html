@@ -39,30 +39,48 @@
 		</script>
 		<script type="text/x-handlebars" data-template-name="index">
 			<div class="hero-unit">
-			  <h1>Spacehub</h1>
-			  <p>Send Your Projects Into Orbit</p>
-			  <p>
-			    <a href="#/signup" class="btn btn-primary btn-large">
-			      Sign in or Sign up
-			    </a>
-			  </p>
+				<div class="span6">
+			  		<h1>Spacehub</h1>
+
+			  		<p>Send Your Projects Into Orbit</p>
+			  		<p>
+			  		  <a href="#/signup" class="btn btn-primary btn-large">
+			  		    Sign in or Sign up
+			  		  </a>
+			  		</p>
+		  		</div>
+		  		<div>
+		  			<p>
+		  			SpaceHub is a hosted source management service that simplifies tracking all your diverse projects. Mirror projects stored in a variety of version control systems into one central GitHub account without difficult and lengthy migrations. Developers can continue working with their prefered hosting while still easily sharing their work with the community through their Github account.
+		  			</p>
+		  		</div>
 			</div>
 			<div class="row-fluid">
-				<div class="span3 well">
-					<h2>A Callout Box</h2>
-					<p>Got some text and stuff.</p>
+				<div class="span4 well">
+					<h2>Lots of Services</h2>
+					<ul>
+						<li>Git</li>
+						<li>Subversion</li>
+						<li>Mercurial</li>
+						<li>... even tarballs</li>
+					</ul>
 				</div>
-				<div class="span3 well">
-					<h2>A Callout Box</h2>
-					<p>Got some text and stuff.</p>
+				<div class="span4 well">
+					<h2>Lots of Benefits</h2>
+					<ul>
+						<li>Easily set up mirrors of existing code sources, whether those are Git, Mercurial, or SVN repos, or just static files.</li>
+						<li>Localized issue tracking and community participation through the magic of Github.</li>
+						<li>Manages Github repository creation and syncing for you.</li>
+						<li>As many users and Github repositories as suit your needs</li>
+					</ul>
 				</div>
-				<div class="span3 well">
-					<h2>A Callout Box</h2>
-					<p>Got some text and stuff.</p>
-				</div>
-				<div class="span3 well">
-					<h2>A Callout Box</h2>
-					<p>Got some text and stuff.</p>
+				<div class="span4 well">
+					<h2>Free and Open</h2>
+					<ul>
+						<li><a href="http://www.github.com/ryansb/spacehub"> Get it on Github</a>: Host with us, or run your own</li>
+						<li>Runs on Red Hat OpenShift</li>
+						<li>Licensed under the GNU AGPL 3</li>
+					</ul>
 				</div>
 			</div>
 		</script>
@@ -124,13 +142,15 @@
 				</div>
 				<div class="span10 well">
 					<h2>Project Dashboard</h2>
+					{{#unless controller.length}}
+						Spacehub isn't managing any projects for you. Sync a repository with Github to get started.
+					{{/unless}}
 					<ul class="list">
 							{{#each repo in controller}}
 								<li class="repo inline-block">
 								{{#linkTo repo repo}}
 									<div class="row-fluid">
 										<div class="span6">
-											<div class="repo-icon fui-settings-24"></div>
 											<h4 class="repo-name inline">{{repo.name}}</h4>
 											<h5 class="repo-type">{{repo.github_url}}</h5>
 										</div>
@@ -210,7 +230,7 @@
 							</div>
 						</fieldset>
 						<div class="control-group">
-							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-primary">Sync Project with Github</button>
+							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-primary">Do it!</button>
 						</div>
 					</form>
 
