@@ -20,12 +20,14 @@ class User(_Base):
     apikeys = relationship("APIKey")
 
 
-class APIKey():
+class APIKey(_Base):
     __tablename__ = "apikeys"
+
     id = Column(Integer, primary_key=True)
     create_at = Column(DateTime())
     apikey = Column(Unicode(255))
     owner_id = Column(Integer, ForeignKey('users.id'))
+
 
 class Repo(_Base):
     __tablename__ = "repos"
