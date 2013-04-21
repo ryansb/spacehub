@@ -15,3 +15,5 @@ import json
 from corniceapp.views.sessions import *
 from corniceapp.views.users import *
 from corniceapp.views.repos import *
+from corniceapp.views.watch_link import *
+from corniceapp.views.watch_job import *
