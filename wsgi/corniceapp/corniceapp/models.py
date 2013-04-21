@@ -1,6 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Integer, Unicode, Text, DateTime, ForeignKey, Column, Boolean
 from sqlalchemy.orm import scoped_session, sessionmaker, relationship
+from datetime import datetime
 
 
 _Base = declarative_base()
@@ -58,8 +59,8 @@ class Repo(_Base):
         r = Repo()
         r.owner_id = new.get('owner_id')
         r.name = new.get('name')
-        r.created_at = new.get('created_at')
-        r.last_updated = new.get('last_updated')
+        r.created_at = datetime.now()
+        r.last_updated = datetime.now()
         r.source_url = new.get('source_url')
         r.github_url = new.get('github_url')
         r.path = new.get('pat')
