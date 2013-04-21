@@ -49,7 +49,7 @@ def logout_user(request):
 users = Service(name='users', path='/users', description="User management api")
 
 
-@users.get(validators=validate_generic)
+@users.get()
 def get_users(request):
     """Get all users, privs: admin"""
     users = DBSession.query(User).all()
@@ -77,6 +77,7 @@ def create_user(request):
         email=request.validated['email']
     )
     DBSession.add(new_user)
+    return {"success": True}
 
 @users.put(validators=validate_generic)
 def edit_user(request):
