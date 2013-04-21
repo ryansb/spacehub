@@ -47,8 +47,8 @@ class Repo(_Base):
         return dict(
             owner_id=self.owner_id,
             name=self.name,
-            created_at=self.created_at,
-            last_updated=self.last_updated,
+            created_at=self.created_at.strftime("%D %H:%M"),
+            last_updated=self.last_updated.strftime("%D %H:%M"),
             source_url=self.source_url,
             github_url=self.github_url,
             path=self.path
