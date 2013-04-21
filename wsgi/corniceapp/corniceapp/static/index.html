@@ -153,23 +153,17 @@
 					<h3>Tools</h3>
 					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-success"><i class="icon-plus icon-white"></i> Sync Project</button>{{/linkTo}}
 				</div>
-				<div class="span10 well">
+				<div class="span10">
 					<h2>Project Dashboard</h2>
 					{{#unless controller.length}}
 						Spacehub is not managing any projects for you. Sync a repository with Github to get started.
 					{{/unless}}
-					<ul class="list">
+					<ul class="list span7">
 						{{#each repo in controller}}
 							<li class="repo inline-block">
 							{{#linkTo repo repo}}
-								<div class="row-fluid">
-									<div class="span6">
-										<h4 class="repo-name inline">{{repo.name}}</h4>
-										<h5 class="repo-type">{{repo.github_url}}</h5>
-									</div>
-									<div class="span5">
-									</div>
-								</div>
+										<h2 class="repo-name inline">{{repo.name}}</h4>
+										<h4 class="repo-type">{{repo.github_url}}</h5>
 							{{/linkTo}}
 							</li>
 						{{/each}}
