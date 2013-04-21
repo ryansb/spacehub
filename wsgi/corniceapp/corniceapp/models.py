@@ -74,7 +74,8 @@ class Repo(_Base):
 
     def clone(self):
         print "Setting clone job"
-        subprocess.check_call(["clone", self.clone_url, repo_path + self.dirname])
+        print ["git", "clone", self.clone_url, repo_path + self.dirname]
+        subprocess.check_call(["git", "clone", self.clone_url, repo_path + self.dirname])
         return True
 
     def push(self):
