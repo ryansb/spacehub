@@ -74,8 +74,8 @@ class Repo(_Base):
 
     def clone(self):
         print "Setting clone job"
-        print ["git", "clone", self.clone_url, repo_path + self.dirname]
-        subprocess.check_call(["git", "clone", self.clone_url, repo_path + self.dirname])
+        print ["git", "clone", self.clone_url, self.dirname]
+        subprocess.check_call(["git", "clone", self.clone_url, self.dirname])
         return True
 
     def push(self):
@@ -84,7 +84,7 @@ class Repo(_Base):
         return True
 
     def commit_a(self, message):
-        cmd = 'bash -c "cd %s && git add . && git commit -am \\"%s\\""' % (repo_path + self.dirname, message)
+        cmd = 'bash -c "cd %s && git add . && git commit -am \\"%s\\""' % (self.dirname, message)
         print cmd
         subprocess.check_call(cmd.split(' '))
         return True
@@ -102,5 +102,5 @@ def initialize_sql(engine):
                                       source_url="sourceforge.com/lololol",
                                       clone_url="git://github.com/ryansb/genetic-css.git",
                                       github_url="https://github.com/ryansb/genetic-css",
-                                      dirname="genetic-css")))
+                                      dirname="/tmp/genetic-css")))
     DBSession.commit()
