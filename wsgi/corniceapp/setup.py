@@ -37,6 +37,7 @@ setup(name='corniceapp',
         'sh',
         'BeautifulSoup',
         'GitPython',
+        'requests'
     ],
     entry_points = """\
     [paste.app_factory]
