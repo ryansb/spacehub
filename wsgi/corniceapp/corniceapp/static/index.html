@@ -29,6 +29,9 @@
 					    <ul class="nav pull-right">
 						    <li><a href="#">Docs</a></li>
 						    <li><a href="#/admin">Admin</a></li>
+						    {{#if App.authorized}}
+						    	<li><a href="#" {{action logout}}>Log out</a></li>
+						    {{/if}}
 					    </ul>
 				    </div>
 			    </div>
@@ -146,20 +149,20 @@
 						Spacehub isn't managing any projects for you. Sync a repository with Github to get started.
 					{{/unless}}
 					<ul class="list">
-							{{#each repo in controller}}
-								<li class="repo inline-block">
-								{{#linkTo repo repo}}
-									<div class="row-fluid">
-										<div class="span6">
-											<h4 class="repo-name inline">{{repo.name}}</h4>
-											<h5 class="repo-type">{{repo.github_url}}</h5>
-										</div>
-										<div class="span5">
-										</div>
+						{{#each repo in controller}}
+							<li class="repo inline-block">
+							{{#linkTo repo repo}}
+								<div class="row-fluid">
+									<div class="span6">
+										<h4 class="repo-name inline">{{repo.name}}</h4>
+										<h5 class="repo-type">{{repo.github_url}}</h5>
 									</div>
-								{{/linkTo}}
-								</li>
-							{{/each}}
+									<div class="span5">
+									</div>
+								</div>
+							{{/linkTo}}
+							</li>
+						{{/each}}
 					</ul>
 				</div>
 			</div>
