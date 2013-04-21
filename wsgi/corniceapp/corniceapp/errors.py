@@ -1,4 +1,4 @@
-from webob import Response, exec
+from webob import Response, exc
 
 
 class _401(exc.HTTPError):
