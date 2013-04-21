@@ -67,6 +67,7 @@ class Repo(_Base):
     github_repo = Column(Text())
     clone_url = Column(Text())
     dirname = Column(Text())
+    source_type = Column(Text())
 
     @property
     def github_url(self):
@@ -84,7 +85,8 @@ class Repo(_Base):
             github_repo=self.github_repo,
             github_url=self.github_url,
             clone_url=self.clone_url,
-            dirname=self.dirname
+            dirname=self.dirname,
+            source_type=self.source_type
         )
 
     @classmethod
@@ -99,6 +101,7 @@ class Repo(_Base):
         r.github_repo = new.get('github_repo')
         r.clone_url = new.get('clone_url')
         r.dirname = new.get('dirname')
+        r.source_type = new.get('source_type')
         return r
 
     def clone(self):
