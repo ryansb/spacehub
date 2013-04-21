@@ -85,12 +85,14 @@ App.NewRepoController = Ember.Controller.extend({
 		console.log("Creating repo.");
 
 		var name = $("#repo-name").val();
-		var github_url = "https://www.github.com/" + $("#repo-github-user").val() + "/" + $("#repo-github-name").val();
+		var github_uname = $("#repo-github-user").val();
+		var github_repo = $("#repo-github-name").val();
 		var source_url = $("#repo-source-url").val();
 		var source_type = $('input[name=repo-source-type]:checked').val();
 		body = {
 			"name": name,
-			"github_url": github_url,
+			"github_uname": github_url,
+			"github_repo": github_repo,
 			"source_url": source_url,
 			"source_type": source_type
 		};
@@ -113,12 +115,14 @@ App.RepoController = Ember.ObjectController.extend({
 		console.log(controller);
 		console.log("Saving Repo.");
 		var name = $("#repo-name").val();
-		var github_url = "https://www.github.com/" + $("#repo-github-user").val() + "/" + $("#repo-github-name").val();
+		var github_uname = $("#repo-github-user").val();
+		var github_repo = $("#repo-github-name").val();
 		var source_url = $("#repo-source-url").val();
 		var source_type = $('input[name=repo-source-type]:checked').val();
 		body = {
 			"name": name,
-			"github_url": github_url,
+			"github_uname": github_url,
+			"github_repo": github_repo,
 			"source_url": source_url,
 			"source_type": source_type
 		};
@@ -145,7 +149,7 @@ App.RepoController = Ember.ObjectController.extend({
 			success: function (response) {
 				console.log("Successfully deleted repo.");
 				controller.set('content', App.Repo.findAll());
-				controller.transitionToRoute("dashboard");
+				controller.transitionToRoute("repos");
 			},
 			error: function (response) {
 				console.log("Failed to delete repo.");
@@ -198,7 +202,7 @@ App.UserController = Ember.Controller.extend({
 				type: "POST",
 				data: JSON.stringify(body),
 				success: function (response) {
-					controller.transitionToRoute("dashboard");
+					controller.transitionToRoute("repos");
 					console.log("Successfully created user.");
 				},
 				error: function (response) {
@@ -221,7 +225,7 @@ App.UserController = Ember.Controller.extend({
 			type: "POST",
 			data: JSON.stringify(body),
 			success: function (response) {
-				controller.transitionToRoute("dashboard");
+				controller.transitionToRoute("repos");
 				console.log("Successfully logged in user.");
 				App.set('authorized', true);
 			},
