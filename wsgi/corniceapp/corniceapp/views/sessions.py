@@ -74,10 +74,12 @@ def create_key(request):
         {"username": "dat-user"}
     """
     cur_user = request.validated['ValidUser']
+    print("cur_user: " + str(cur_user))
     if cur_user:
         try:
             target_user = DBSession.query(User).filter(
                 User.name==request.validated['username']).one()
+            print("target_user: " + str(target_user))
         except:
             target_user = None
 
