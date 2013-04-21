@@ -106,6 +106,7 @@ App.NewRepoController = Ember.Controller.extend({
 			type: "POST",
 			data: JSON.stringify(body),
 			success: function (response) {
+				controller.transitionToRoute("repo", response);
 				console.log("Successfully created repo.");
 			},
 			error: function (response) {
