@@ -34,6 +34,7 @@ setup(name='corniceapp',
         'MySQL-python',
         'zope.sqlalchemy',
         'WebError',
+        'sh',
     ],
     entry_points = """\
     [paste.app_factory]

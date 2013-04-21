@@ -13,9 +13,6 @@ import hashlib
 import json
 
 
-hello = Service(name='hello', path='/', description="Simplest app")
-
-
 login = Service(name='users', path='/users/login', description='User login endpoints')
 
 
@@ -118,12 +115,6 @@ def delete_key(request):
         privs: logged in, admin
     """
     pass
-
-
-@hello.get()
-def get_info(request):
-    """Returns Hello in JSON."""
-    return {'Hello': 'World'}
 
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
