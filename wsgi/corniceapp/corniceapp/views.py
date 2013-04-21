@@ -1,7 +1,6 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, Repo, DBSession
 from corniceapp.models import User, Repo, DBSession, TrackedLink, ScrapeJob
 from corniceapp.validators import validate_generic
 from pyramid.security import (
@@ -149,7 +148,7 @@ def post_repo(request):
 watch_page = Service(name="watch_page", path="/watch_page",
         description="Service to deal with watching page links for changed files")
 
-@watch_page.get()
+@watch_page.get(validators=validate_generic)
 def get_watched_page(request):
     """
         Get all trackedlinks that spacehub knows of for the user
@@ -165,14 +164,14 @@ def get_watched_page(request):
 
     return {"tracked_links": filtered_links}
 
-@watch_page.put()
+@watch_page.put(validators=validate_generic)
 def put_watched_page(request):
     """
         Edit watched page
     """
     pass
 
-@watch_page.post()
+@watch_page.post(validators=validate_generic)
 def post_watched_page(request):
     """
         Add a new watched page
@@ -190,7 +189,7 @@ def get_watch_runner(request):
     """
     return ScrapeJob.all()
 
-@watch_runner.post()
+@watch_runner.post(validators=validate_generic)
 def post_watch_runner(request):
     """
         When POSTED to this will start operating on watched pages
