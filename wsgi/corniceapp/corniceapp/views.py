@@ -4,9 +4,6 @@ from cornice import Service
 from corniceapp.models import User, Repo, DBSession
 
 
-hello = Service(name='hello', path='/', description="Simplest app")
-
-
 users = Service(name='users', path='/users', description="User management api")
 
 
@@ -63,12 +60,6 @@ def create_key(request):
 def delete_key(request):
     """Delete an api key"""
     pass
-
-
-@hello.get()
-def get_info(request):
-    """Returns Hello in JSON."""
-    return {'Hello': 'World'}
 
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
