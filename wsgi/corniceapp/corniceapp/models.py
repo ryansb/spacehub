@@ -14,6 +14,7 @@ class User(_Base):
     name = Column(Unicode(255))
     email = Column(Unicode(255))
     created_at = Column(DateTime())
+    password = Column(Unicode(255))
     repos = relationship("Repo")
     apikeys = relationship("APIKey")
 
