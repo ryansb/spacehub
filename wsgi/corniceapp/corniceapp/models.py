@@ -139,8 +139,8 @@ class Repo(_Base):
         r.source_url = new.get('source_url')
         r.github_uname = new.get('github_uname')
         r.github_repo = new.get('github_repo')
-        r.clone_url = new.get('clone_url')
-        r.dirname = new.get('dirname')
+        r.clone_url = new.get('clone_url', 'git@github.com:{0}/{1}.git'.format(r.github_uname, r.github_repo))
+        r.dirname = new.get('dirname', os.path.join('/tmp/', new.get('name')))
         r.source_type = new.get('source_type')
         return r
 

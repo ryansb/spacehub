@@ -18,7 +18,7 @@
 """
 
 from cornice import Service
-from corniceapp.models import Repo, DBSession
+from corniceapp.models import Repo, DBSession, TrackedLink
 from corniceapp.validators import valid_user
 from corniceapp.errors import _401
 
@@ -100,6 +100,16 @@ def post_repo(request):
         r = Repo.from_dict(data)
         DBSession.add(r)
         DBSession.commit()
+        if data['source_type'] == 'tar':
+            t = TrackedLink.from_dict({
+                "repoid": r.id,
+                "name": r.name,
+                "link_text": data.get('link_text'),
+                "url": r.source_url,
+            })
+            t.repo = r
+            DBSession.add(t)
+            DBSession.commit()
         return r.to_dict()
     raise _401()
 
