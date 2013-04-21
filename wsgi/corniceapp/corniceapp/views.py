@@ -160,7 +160,7 @@ def get_watched_page(request):
     for repo in current_user.repos:
         t_link = repo.track_link
         if t_link:
-            filtered_tracks.append(dict(t_link))
+            filtered_tracks.append(t_link.to_dict())
 
     return {"tracked_links": filtered_links}
 
@@ -176,7 +176,6 @@ def post_watched_page(request):
     """
         Add a new watched page
     """
-    pass
 
 
 watch_runner = Service(name="watch_runner", path="/watch_runner",

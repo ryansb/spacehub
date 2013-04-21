@@ -81,15 +81,23 @@ class TrackedLink(_Base):
     repo_id = Column(Integer, ForeignKey('repos.id'))
     repo = relationship("Repo", backref="track_link")
 
-    def __dict__(self):
-        return {
-            "id" : self.id,
-            "name" : self.name,
-            "last_access" : self.last_accessed,
-            "last_modified" : self.modified,
-            "link_text" : self.link_text,
-            "repo" : self.repo_id
-            }
+    def to_dict(self):
+        return dict(
+            id=self.id,
+            name=self.name,
+            last_access=self.last_accessed,
+            last_modified=self.modified,
+            link_text=self.link_text,
+            repo=self.repo_id
+        )
+
+    def from_dict(cls, new):
+        t = TrackedLink()
+        t.repo_id = new.get('repo_id')
+        t.name = new.get('name')
+        t.url = new.get('url')
+        t.link_text = new.get('link_text')
+        return t
 
 
 class ScrapeJob(_Base):
