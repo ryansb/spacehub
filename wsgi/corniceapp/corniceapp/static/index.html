@@ -207,6 +207,73 @@
 				</div>
 			</div>			
 		</script>
+		<script type="text/x-handlebars" data-template-name="repo">
+			<div class="row">
+				<div class="offset2 span4">
+					<h2>Sync a Project</h2>
+				</div>
+			</div>
+			<div class="row">
+				<div class="sidebar span2">
+					{{#linkTo newRepo}}<button type="button" class="btn btn-large btn-block btn-primary">Sync Project</button>{{/linkTo}}
+				</div>
+				<div class="span10">
+					<form class="form-horizontal" id="create-repo-form" {{action "putRepo" on="submit"}}>
+						<fieldset>
+							<legend>Changing Project Settings</legend>
+							<div class="control-group">
+							    <label class="control-label" for="box-name">Project Name</label>
+								<div class="controls">
+									<input type="text" class="repo-name" name="name" id="repo-name" {{bindAttr value="name"}} required>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls">
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-1" value="tar">
+										Tarball
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-2" value="git">
+										Git
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-3" value="hg">
+										Mercurial
+									</label>
+									<label class="radio inline">
+										<input type="radio" name="repo-source-type" id="repo-source-type-4" value="svn">
+										SVN
+									</label>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-source-url">Project Source URL</label>
+								<div class="controls">
+									<input type="text" class="repo-source-url" name="repo-source-url" id="repo-source-url" {{bindAttr value="source_url"}} required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-github-user">Destination Github URL</label>
+								<div class="controls">
+									<input type="text" class="repo-github-user" name="repo-github-user" id="repo-github-user" {{bindAttr value="github_user"}} required>
+								</div>
+							</div>
+							<div class="control-group">
+							    <label class="control-label" for="repo-github-name">Destination Github Repository</label>
+								<div class="controls">
+									<input type="text" class="repo-github-name" name="repo-github-name" id="repo-github-name" {{bindAttr value="github_repo"}} required>
+								</div>
+							</div>
+						</fieldset>
+						<div class="control-group">
+							<button type="submit" name="create-repo" id="create-repo" class="btn btn-large btn-block btn-primary">Save Changes</button>
+						</div>
+					</form>
+
+				</div>
+			</div>			
+		</script>
 		<script src="js/libs/jquery-1.9.1.js"></script>
 		<script src="js/jquery-ui-1.10.0.custom.min.js"></script>
 		<script src="js/jquery.dropkick-1.0.0.js"></script>

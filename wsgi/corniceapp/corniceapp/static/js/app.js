@@ -69,7 +69,12 @@ App.ReposRoute = Ember.Route.extend({
 //
 // Views
 //
-
+App.RepoView = Ember.View.extend({
+	didInsertElement: function didInsertElement() {
+		var content = this.controller.content;
+		$("input[value=" + content.repo_type + "]").attr('checked', 'checked');
+	}
+});
 //
 // Controllers
 //
