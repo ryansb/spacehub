@@ -72,6 +72,15 @@ class APIKey(_Base):
             owner_id=self.owner_id)
 
 
+class Secret(_Base):
+    __tablename__ = "secrets"
+    id = Column(Integer, primary_key=True)
+    oauth = Column(Text())
+    private_key = Column(Text())
+    public_key = Column(Text())
+    comment = Column(Text())
+
+
 class Repo(_Base):
     __tablename__ = "repos"
     __mapper_args__ = dict(order_by="created_at desc")
