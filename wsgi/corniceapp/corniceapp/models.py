@@ -118,12 +118,12 @@ class Repo(_Base):
     def to_dict(self):
         ret = {}
 
-        try:
-            r = git.Repo(self.dirname)
-            ret['last_commit'] = r.git.log("--oneline -n1")
-        except:
-            ret['last_commit'] = "No commits yet..."
-            pass
+#        try:
+        r = git.Repo(self.dirname)
+        ret['last_commit'] = r.git.log("--oneline -n1")
+#        except:
+#            ret['last_commit'] = "No commits yet..."
+#            pass
 
         ret.update(dict(
             id=self.id,
