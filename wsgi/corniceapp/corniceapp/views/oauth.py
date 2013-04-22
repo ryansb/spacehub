@@ -5,6 +5,8 @@ import requests
 import logging
 import urllib
 import uuid
+import json
+
 
 log = logging.getLogger('spacehub.oauth')
 
@@ -28,16 +30,19 @@ def oauth_get_code(request):
     secret.access_token = response.get('access_token')
     DBSession.add(secret)
     DBSession.commit()
-    print secret.public_key
+
+    log.info(secret.public_key)
+    data = {
+        "title": "SpaceHub",
+        "key": secret.public_key,
+    }
     params = {
-        "title": "Spacehub",
-        "key": secret.public_key
+        "access_token": secret.access_token
     }
 
     # add public key to user's acc.
-    response = requests.post(GITHUB_API_URL + "/user/keys", params=params)
-    print response.text
-
+    response = requests.post(GITHUB_API_URL + "/user/keys", params=params,data=json.dumps(data))
+    log.info(response.text)
     raise HTTPTemporaryRedirect(location="/app/index.html#/repos")
 
 def oauth_authorize(request):

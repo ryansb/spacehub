@@ -1,4 +1,3 @@
-import sys
 import os
 import os.path
 import sh
@@ -6,8 +5,10 @@ import datetime
 from sh import cp
 from corniceapp.models import DBSession, Repo, TrackedLink
 from sqlalchemy import create_engine
+import logging
 
 
+logger = logging.getLogger("spacehub.cron")
 db_name = "spacehub"
 
 db_url = "sqlite:////tmp/test.db"
@@ -18,15 +19,16 @@ if os.environ.get("OPENSHIFT_MYSQL_DB_URL", None):
 
 
 def sync_tarballs(DBSession):
-    print("Syncing Tarball links")
+    logger.info(("Syncing Tarball links"))
 
     links = DBSession.query(TrackedLink).all()
     for link in links:
         repo = DBSession.query(Repo).filter(Repo.id==link.repo_id).first()
         try:
             repo.clone()
-        except:
-            pass
+        except Exception as e:
+            logger.info("Exception found: " + str(e.args))
+            return
         extracted_dir = link.retrieve()
         cp('-R', sh.glob('{0}/*'.format(extracted_dir)), repo.dirname)
         repo.commit_a("Automated tarball sync: {0}".format(link.modified.strftime("%D %H:%M")))
@@ -34,7 +36,7 @@ def sync_tarballs(DBSession):
         repo.last_updated = datetime.now()
         DBSession.add(repo)
         DBSession.commit()
-        print("Synced {0} -> {1}".format(link.name, repo.name))
+        logger.info("Synced {0} -> {1}".format(link.name, repo.name))
 
 def sync_svn(DBSession):
     print("Syncing svn repos")

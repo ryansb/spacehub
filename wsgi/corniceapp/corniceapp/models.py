@@ -23,25 +23,26 @@ from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from datetime import datetime
 from shlex import split
 import subprocess
+def check_output(cmd):
+    env = os.environ.copy()
+    env['GIT_SSH'] = "/tmp/massh.sh"
+    return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env).communicate()[0]
 import git
 import os.path
 from handler import handle_file
-
 from urllib import urlretrieve
-
 from uuid import uuid4
-from datetime import datetime
-
 from bs4 import BeautifulSoup as BS4
 import urllib2
-
 from os import path
-
 import hashlib
+import logging
+import os
 
+
+logger = logging.getLogger("spacehub.models")
 _Base = declarative_base()
 DBSession = scoped_session(sessionmaker())
-
 repo_path = "/tmp/"
 
 
@@ -160,26 +161,31 @@ class Repo(_Base):
         self.link_text = new.get('link_text', self.link_text)
         return True
 
+    def setup_keys(self):
+        sekrit = DBSession.query(Secret).first()
+        with open("/tmp/id_rsa", 'w') as f:
+            f.write(sekrit.private_key)
+        with open("/tmp/massh.sh", 'w') as f:
+            f.write("""#!/bin/bash
+exec ssh -vvv -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $@""")
+        subprocess.check_call(split("chmod +x /tmp/massh.sh"))
+        subprocess.check_call(split("chmod 600 /tmp/id_rsa"))
+
     def clone(self):
-        print "Setting clone job"
+        logger.info("Setting clone job")
         if not os.path.exists(self.dirname):
-            print ["git", "clone", self.clone_url, self.dirname]
-            subprocess.check_call(["git", "clone", self.clone_url, self.dirname])
+            self.setup_keys()
+            logger.info('git clone {0} {1}'.format(self.clone_url, self.dirname))
+            output = check_output(split('git clone {0} {1}'.format(self.clone_url, self.dirname)))
+            logger.info("Finshed the Clone")
+            logger.info(output)
         return True
 
     def push(self):
-        print "Setting push job"
-        sekrit = DBSession.query(Secret).first()
-        with open("/tmp/makey", 'w') as f:
-            f.write(sekrit.private_key)
-        with open("/tmp/massh.sh", 'w') as f:
-            f.write("""
-                    #!/bin/bash
-                    exec ssh -i /tmp/makey $@
-                    """)
-        subprocess.check_call(split("chmod +x /tmp/massh.sh"))
-        subprocess.check_call(split("chmod 600 /tmp/makey"))
-        subprocess.check_call(split('cd {0} && GIT_SSH="/tmp/massh.sh" git push --all origin').format(self.dirname))
+        logger.info("Pushing repo")
+        self.setup_keys()
+        output = check_output(split('cd {0} && git push --all origin').format(self.dirname))
+        logger.info(output)
         return True
 
     def commit_a(self, message):
