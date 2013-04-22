@@ -21,7 +21,7 @@ def oauth_get_code(request):
     response = oauth_authorize(request)
     secret = None
     if DBSession.query(Secret).all().count > 0:
-        secret = DBSession.get(Secret).first()
+        secret = DBSession.query(Secret).first()
     else:
         secret = Secret()
     # do stuff to secret to set info
