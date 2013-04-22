@@ -28,14 +28,15 @@ def oauth_get_code(request):
     secret.access_token = response.get('access_token')
     DBSession.add(secret)
     DBSession.commit()
-
+    print secret.public_key
     params = {
         "title": "Spacehub",
         "key": secret.public_key
     }
 
     # add public key to user's acc.
-    requests.post(GITHUB_API_URL + "/user/keys", params=params)
+    response = requests.post(GITHUB_API_URL + "/user/keys", params=params)
+    print response.text
 
     raise HTTPTemporaryRedirect(location="/app/index.html#/repos")
 
