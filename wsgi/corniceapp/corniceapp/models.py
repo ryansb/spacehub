@@ -205,7 +205,6 @@ class Repo(_Base):
         return True
 
 
-
 class TrackedLink(_Base):
     __tablename__ = 'tracked_links'
 

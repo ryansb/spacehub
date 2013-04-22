@@ -111,6 +111,7 @@ def post_repo(request):
                 t.repo = r
                 DBSession.add(t)
                 DBSession.commit()
+            r.clone()
             return r.to_dict()
     raise _401()
 
