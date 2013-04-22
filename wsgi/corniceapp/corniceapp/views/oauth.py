@@ -1,6 +1,6 @@
 from cornice import Service
 from corniceapp.models import DBSession, Secret
-from pyramid.httpexceptions import HTTPTemporaryRedirect
+from pyramid.httpexceptions import HTTPSeeOther, HTTPTemporaryRedirect
 import requests
 import logging
 import urllib
@@ -67,5 +67,5 @@ def outh_redirect(request):
 			#"state": str(uuid.uuid4())
 	}
 
-	raise HTTPTemporaryRedirect(location="%s?%s" % (GITHUB_AUTH_URL, urllib.urlencode(params)))
+	raise HTTPSeeOther(location="%s?%s" % (GITHUB_AUTH_URL, urllib.urlencode(params)))
 
