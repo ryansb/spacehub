@@ -21,7 +21,7 @@ from cornice import Service
 from corniceapp.models import Repo, DBSession, TrackedLink
 from corniceapp.validators import valid_user
 from corniceapp.errors import _401
-
+from corniceapp.bin import cron
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
               "the addition/deletion of repositories")
@@ -29,7 +29,13 @@ repo_param = Service(name='repo', path='/repo/{rid}', description="Service to "
                      "deal with the addition/deletion of repositories")
 repo_act = Service(name='repo', path='/repo/act/{rid}', description="Service to "
                      "deal with the addition/deletion of repositories")
+kicker = Service(name='kicker', path='/kick', description="Force all repos to sync")
 
+
+@kicker.post()
+def kick_sync(request):
+    cron.sync_tarballs(DBSession)
+    return {"success": True}
 
 
 @repo_act.put(validators=valid_user)
