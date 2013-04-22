@@ -54,16 +54,18 @@ def oauth_authorize(request):
 	headers = {
 		"Accept": "application/json"
 	}
-	return requests.post(GITHUB_TOKEN_URL, params, headers=headers).json()	
+	return requests.post(GITHUB_TOKEN_URL, params, headers=headers).json()
 
+# FIrst
 @oauth.post()
 def outh_redirect(request):
 	scopes = ['repo', 'notifications', 'gist', 'user']
 	params = {
 			"client_id": request.registry.settings["client_id"],
 			# "client_secret": request.registry.settings["client_secret"],
+            "redirect_uri": request.registry.settings[""]
 			"scope": ','.join(scopes),
-			"state": str(uuid.uuid4())
+			#"state": str(uuid.uuid4())
 	}
 
 	raise HTTPTemporaryRedirect(location="%s?%s" % (GITHUB_AUTH_URL, urllib.urlencode(params)))
