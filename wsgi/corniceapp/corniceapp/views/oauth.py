@@ -25,7 +25,7 @@ def oauth_get_code(request):
     else:
         secret = Secret()
     # do stuff to secret to set info
-    secret.access_token = response.access_token
+    secret.access_token = response.get('access_token')
     DBSession.add(secret)
     DBSession.commit()
 
