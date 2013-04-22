@@ -63,7 +63,7 @@ def outh_redirect(request):
 	params = {
 			"client_id": request.registry.settings["client_id"],
 			# "client_secret": request.registry.settings["client_secret"],
-			"scope": ','.join(scopes),
+			#"scope": ','.join(scopes),
 			#"state": str(uuid.uuid4())
 	}
 
