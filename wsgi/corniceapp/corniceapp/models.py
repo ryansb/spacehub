@@ -27,7 +27,6 @@ def check_output(cmd):
     env = os.environ.copy()
     env['GIT_SSH'] = "/tmp/massh.sh"
     return subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=env).communicate()[0]
-import git
 import os.path
 from handler import handle_file
 from urllib import urlretrieve
@@ -172,20 +171,21 @@ exec ssh -q -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/de
         subprocess.check_call(split("chmod 600 /tmp/id_rsa"))
 
     def clone(self):
-        logger.info("Setting clone job")
+        logger.info("Starting to clone")
         if not os.path.exists(self.dirname):
             self.setup_keys()
             logger.info('git clone {0} {1}'.format(self.clone_url, self.dirname))
             output = check_output(split('git clone {0} {1}'.format(self.clone_url, self.dirname)))
-            logger.info("Finshed the Clone")
             logger.info(output)
+        logger.info("Finshed the Clone")
         return True
 
     def push(self):
         logger.info("Pushing repo")
         self.setup_keys()
-        output = check_output(split('git --git-dir={0} push --all origin').format(self.dirname))
+        output = check_output(split('git --git-dir={0} --work-tree={1} push --all origin'.format(os.path.join(self.dirname, ".git"), self.dirname)))
         logger.info(output)
+        logger.info("Repo Pushed")
         return True
 
     def commit_a(self, message):
@@ -193,10 +193,10 @@ exec ssh -q -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/de
             self.clone()
         #r = git.Repo(self.dirname)
         #r.git.add(os.path.join(self.dirname, "*"))
-        output = check_output(split("git --git-dir={0} add *"))
+        output = check_output(split("git --git-dir={0} --work-tree={1} add *".format(os.path.join(self.dirname, ".git"), self.dirname)))
         logger.info(output)
         try:
-            output = check_output(split("git --git-dir={0} commit -m '{1}'".format(self.dirname, message)))
+            output = check_output(split("git --git-dir={0} --work-tree={1} commit -m '{2}'".format(os.path.join(self.dirname, ".git"), self.dirname, message)))
             logger.info(output)
         except:
             return False
