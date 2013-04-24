@@ -1,7 +1,7 @@
 import os
 import os.path
 import sh
-import datetime
+from datetime import datetime
 from sh import cp
 from corniceapp.models import DBSession, Repo, TrackedLink
 from sqlalchemy import create_engine
