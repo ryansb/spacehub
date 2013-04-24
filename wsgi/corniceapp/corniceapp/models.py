@@ -167,7 +167,7 @@ class Repo(_Base):
             f.write(sekrit.private_key)
         with open("/tmp/massh.sh", 'w') as f:
             f.write("""#!/bin/bash
-exec ssh -vvv -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $@""")
+exec ssh -q -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $@""")
         subprocess.check_call(split("chmod +x /tmp/massh.sh"))
         subprocess.check_call(split("chmod 600 /tmp/id_rsa"))
 
@@ -191,11 +191,13 @@ exec ssh -vvv -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/
     def commit_a(self, message):
         if not os.path.exists(self.dirname):
             self.clone()
-        r = git.Repo(self.dirname)
-        r.git.add(os.path.join(self.dirname, "*"))
+        #r = git.Repo(self.dirname)
+        #r.git.add(os.path.join(self.dirname, "*"))
+        output = check_output(split("git --git-dir={0} add *"))
+        logger.info(output)
         try:
-            # btdubs this can probably be used to do remote shell commands
-            r.git.commit('-m "%s"' % message)
+            output = check_output(split("git --git-dir={0} commit -m '{1}'".format(self.dirname, message)))
+            logger.info(output)
         except:
             return False
         return True
