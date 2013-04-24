@@ -184,7 +184,7 @@ exec ssh -vvv -i /tmp/id_rsa -o StrictHostKeyChecking=no -o UserKnownHostsFile=/
     def push(self):
         logger.info("Pushing repo")
         self.setup_keys()
-        output = check_output(split('cd {0} && git push --all origin').format(self.dirname))
+        output = check_output(split('git --git-dir={0} push --all origin').format(self.dirname))
         logger.info(output)
         return True
 
