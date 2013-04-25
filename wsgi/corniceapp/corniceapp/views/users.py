@@ -19,7 +19,7 @@
 
 from cornice import Service
 from corniceapp.models import User, DBSession
-from corniceapp.validators import validate_generic
+from corniceapp.validators import valid_user, valid_body
 from corniceapp.errors import _401
 import hashlib
 
@@ -51,7 +51,7 @@ def get_users(request):
 
 
 
-@users.post(validators=validate_generic)
+@users.post(validators=valid_body(("username", "password", "email")))
 def create_user(request):
     """
         Create a new User
@@ -70,7 +70,7 @@ def create_user(request):
     return {"success": True}
 
 
-@users.put(validators=validate_generic)
+@users.put(validators=[valid_body(('username', 'changes')), valid_user])
 def edit_user(request):
     """
         Edit an existing user
@@ -78,41 +78,39 @@ def edit_user(request):
         {"username": "target", "changes": {"username": "change", "password": "changed", "email": "changed"}}
     """
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        target_username = request.validated['username']
-        target_users = DBSession.query(User).filter(User.name==target_username)
-        if target_users.count() > 1:
-            target_user = target_users.one()
-            if target_user.name == cur_user.name or cur_user.admin:
-                changes = request.validated['changes']
-                if "username" in changes:
-                    if not DBSession.query(User).filter(User.name==changes['username']).count() > 1:
-                        target_user.name = changes['username']
-                if "password" in changes:
-                    target_user.password = hashlib.sha512(changes['password']).hexdigest()
-                if "email" in changes:
-                    if not DBSession.query(User).filter(User.email==changes['email']).count() > 1:
-                        target_user.email = changes['email']
-                DBSession.add(target_user)
-                DBSession.commit()
+    target_username = request.validated['username']
+    target_users = DBSession.query(User).filter(User.name==target_username)
+    if target_users.count() > 1:
+        target_user = target_users.first()
+        if target_user.name == cur_user.name or cur_user.admin:
+            changes = request.validated['changes']
+            if "username" in changes:
+                if not DBSession.query(User).filter(User.name==changes['username']).count() > 1:
+                    target_user.name = changes['username']
+            if "password" in changes:
+                target_user.password = hashlib.sha512(changes['password']).hexdigest()
+            if "email" in changes:
+                if not DBSession.query(User).filter(User.email==changes['email']).count() > 1:
+                    target_user.email = changes['email']
+            DBSession.add(target_user)
+            DBSession.commit()
+            return {"success": True}
     raise _401()
 
 
 
-@users.delete(validators=validate_generic)
+@users.delete(validators=[valid_body(('username')), valid_user])
 def delete_user(request):
     """
         Delete a user
         privs: admin, or self
     """
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        try:
-            target_user = DBSession.query(User).filter(User.name==request.validated['username']).one()
-        except:
-            target_user = None
-        if target_user and (target_user.name == cur_user.name or cur_user.admin):
-            DBSession.delete(target_user)
+    target_query = DBSession.query(User).filter(User.name==request.validated['username'])
+    if target_query.count() > 0:
+        target = target_query.first()
+        if target.name == cur_user.name or cur_user.admin:
+            DBSession.delete(target)
             DBSession.commit()
             return {"success": True}
     raise _401()
