@@ -19,7 +19,7 @@
 
 from cornice import Service
 from corniceapp.models import Repo, DBSession, TrackedLink
-from corniceapp.validators import valid_user
+from corniceapp.validators import valid_user, valid_body
 from corniceapp.errors import _401
 from corniceapp.bin import cron
 
@@ -38,18 +38,17 @@ def kick_sync(request):
     return {"success": True}
 
 
-@repo_act.put(validators=valid_user)
+@repo_act.put(validators=[valid_body(('message')), valid_user])
 def commit_repo(request):
     """
         commit whatever changes have been made
     """
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        print request.matchdict['rid']
-        print request.matchdict['rid']
-        r = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid']).first()
-        if r.owner_id == cur_user.id or cur_user.admin:
-            r.commit_a(request.json.get("message"))
+    repo_query = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid'])
+    if repo_query.count() > 0:
+        repo = repo_query.first()
+        if repo.owner_id == cur_user.id or cur_user.admin:
+            repo.commit_a(request.validated['message'])
             return {"success": True}
     raise _401()
 
@@ -60,13 +59,12 @@ def push_repo(request):
         Push changes to this repo to a remote
     """
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        repos = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid'])
-        if repos.count() > 0:
-            repo = repos.first()
-            if repo.owner_id == cur_user.id or cur_user.admin:
-                repo.push()
-                return {"success": True}
+    repos = DBSession.query(Repo).filter(Repo.id==request.matchdict['rid'])
+    if repos.count() > 0:
+        repo = repos.first()
+        if repo.owner_id == cur_user.id or cur_user.admin:
+            repo.push()
+            return {"success": True}
     raise _401()
 
 
@@ -76,11 +74,11 @@ def clone_repo(request):
         clone a repo fresh
     """
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        print request.matchdict['rid']
-        r = DBSession.query(Repo).filter(Repo.id==1).first()
-        if r.owner_id == cur_user.id or cur_user.admin:
-            r.clone()
+    repo_query = DBSession.query(Repo).filter(Repo.id==1)
+    if repo_query.count() > 0:
+        repo = repo_query.first()
+        if repo.owner_id == cur_user.id or cur_user.admin:
+            repo.clone()
             return {"success": True}
     raise _401()
 
@@ -88,36 +86,32 @@ def clone_repo(request):
 @repo.get(validators=valid_user)
 def get_repos(request):
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        return {"repos": [r.to_dict() for r in DBSession.query(Repo).filter(Repo.owner_id==cur_user.id).all()]}
-    else:
-        raise _401()
+    return {"repos": [r.to_dict() for r in DBSession.query(Repo).filter(Repo.owner_id==cur_user.id).all()]}
 
 
-@repo.post(validators=valid_user)
+@repo.post(validators=[valid_body(('source_type', 'source_url', 'name', 'github_uname', 'github_repo')), valid_user])
 def post_repo(request):
     """
         To create a new repository
     """
     cur_user = request.validated['ValidUser']
-    if cur_user:
-        data = dict(request.json)
-        data.update({'owner_id': cur_user.id})
-        r = Repo.from_dict(data)
-        if not DBSession.query(Repo).filter(Repo.name==r.name).count() > 1:
-            DBSession.add(r)
+    data = request.validated
+    data.update({'owner_id': cur_user.id})
+    r = Repo.from_dict(data)
+    if not DBSession.query(Repo).filter(Repo.name==r.name).count() > 0:
+        DBSession.add(r)
+        DBSession.commit()
+        if data['source_type'] == 'tar':
+            t = TrackedLink.from_dict({
+                "repoid": r.id,
+                "name": r.name,
+                "link_text": data.get('link_text'),
+                "url": r.source_url,
+            })
+            t.repo = r
+            DBSession.add(t)
             DBSession.commit()
-            if data['source_type'] == 'tar':
-                t = TrackedLink.from_dict({
-                    "repoid": r.id,
-                    "name": r.name,
-                    "link_text": data.get('link_text'),
-                    "url": r.source_url,
-                })
-                t.repo = r
-                DBSession.add(t)
-                DBSession.commit()
-            return r.to_dict()
+        return r.to_dict()
     raise _401()
 
 
