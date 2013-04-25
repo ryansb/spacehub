@@ -44,6 +44,20 @@ def valid_user(request):
         raise _401()
 
 
+def valid_body(required_keys):
+    """
+        Create a validation function that makes sure the required keys are
+        present
+    """
+    def valid_body_func(request):
+        data = json.loads(request.body)
+        if all(map(lambda k: k in data,required_keys)):
+            request.validated.update(data)
+        else:
+            raise _401()
+    return valid_body_func
+
+
 def validate_generic(request):
     """
     Generic validator that doesn't really do anything
