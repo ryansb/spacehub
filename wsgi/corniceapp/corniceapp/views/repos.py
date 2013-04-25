@@ -38,7 +38,7 @@ def kick_sync(request):
     return {"success": True}
 
 
-@repo_act.put(validators=[valid_body(('message')), valid_user])
+@repo_act.put(validators=[valid_body('message'), valid_user])
 def commit_repo(request):
     """
         commit whatever changes have been made
@@ -89,7 +89,7 @@ def get_repos(request):
     return {"repos": [r.to_dict() for r in DBSession.query(Repo).filter(Repo.owner_id==cur_user.id).all()]}
 
 
-@repo.post(validators=[valid_body(('source_type', 'source_url', 'name', 'github_uname', 'github_repo')), valid_user])
+@repo.post(validators=[valid_body('source_type', 'source_url', 'name', 'github_uname', 'github_repo'), valid_user])
 def post_repo(request):
     """
         To create a new repository

@@ -51,7 +51,7 @@ def get_users(request):
 
 
 
-@users.post(validators=valid_body(("username", "password", "email")))
+@users.post(validators=valid_body("username", "password", "email"))
 def create_user(request):
     """
         Create a new User
@@ -70,7 +70,7 @@ def create_user(request):
     return {"success": True}
 
 
-@users.put(validators=[valid_body(('username', 'changes')), valid_user])
+@users.put(validators=[valid_body('username', 'changes'), valid_user])
 def edit_user(request):
     """
         Edit an existing user
@@ -99,7 +99,7 @@ def edit_user(request):
 
 
 
-@users.delete(validators=[valid_body(('username')), valid_user])
+@users.delete(validators=[valid_body('username'), valid_user])
 def delete_user(request):
     """
         Delete a user

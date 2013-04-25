@@ -44,7 +44,7 @@ def valid_user(request):
         raise _401()
 
 
-def valid_body(required_keys):
+def valid_body(*required_keys):
     """
         Create a validation function that makes sure the required keys are
         present

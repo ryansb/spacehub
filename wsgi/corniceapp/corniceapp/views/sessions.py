@@ -45,7 +45,7 @@ def gen_apikey():
     raise Exception("can't make a unique key... wat")
 
 
-@login.post(validators=valid_body(('username', 'password')))
+@login.post(validators=valid_body('username', 'password'))
 def login_user(request):
     """
         login a user
@@ -83,7 +83,7 @@ def logout_user(request):
 apikeys = Service(name='apikeys', path='/apikeys', description="Manage API keys")
 
 
-@apikeys.post(validators=[valid_body(('username')), valid_user])
+@apikeys.post(validators=[valid_body('username'), valid_user])
 def create_key(request):
     """
         Create a new api key for a user
@@ -104,7 +104,7 @@ def create_key(request):
     raise _401()
 
 
-@apikeys.delete(validators=[valid_body(('username', 'key')), valid_user])
+@apikeys.delete(validators=[valid_body('username', 'key'), valid_user])
 def delete_key(request):
     """
         Delete an api key
