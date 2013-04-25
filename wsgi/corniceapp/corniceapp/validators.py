@@ -18,21 +18,30 @@
 """
 
 import json
-from corniceapp.models import DBSession, User, APIKey
+from corniceapp.models import DBSession, User
+from corniceapp.errors import _401
 from pyramid.security import authenticated_userid
+import logging
+
+
+logger= logging.getLogger("spacehub.validation")
 
 
 def valid_user(request):
-
+    """
+        Require that a valid user be logged in to access this path
+    """
     email = authenticated_userid(request)
     if email:
-        try:
-            loggedin_user = DBSession.query(User).filter(User.email==email).one()
-        except:
-            loggedin_user = None
-        request.validated['ValidUser'] = loggedin_user
-        if loggedin_user:
-            print("User: " + loggedin_user.name + " " + str(loggedin_user.id))
+        user_query = DBSession.query(User).filter(User.email==email)
+        if user_query.count() > 0:
+            user = user_query.first()
+            request.validated['ValidUser'] = user
+            logger.info("User: " + user.name + " " + str(user.id))
+        else:
+            raise _401()
+    else:
+        raise _401()
 
 
 def validate_generic(request):
