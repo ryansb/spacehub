@@ -19,8 +19,8 @@
 
 from setuptools import setup
 
-setup(name='YourAppName', version='1.0',
-      description='OpenShift Python-2.7 Community Cartridge based application',
+setup(name='Spacehub', version='1.0',
+      description='Spacehub, version control for your version control',
       author='Your Name', author_email='ramr@example.org',
       url='http://www.python.org/sigs/distutils-sig/',
 
