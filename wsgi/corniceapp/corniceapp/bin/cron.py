@@ -9,7 +9,7 @@ import logging
 
 
 logger = logging.getLogger("spacehub.cron")
-db_name = "spacehub"
+db_name = "space"
 
 db_url = "sqlite:////tmp/test.db"
 
