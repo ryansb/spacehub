@@ -17,8 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from pyramid.response import Response
 from pyramid.config import Configurator
+from pyramid.httpexceptions import HTTPMovedPermanently
 from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
@@ -28,7 +28,7 @@ from sqlalchemy import create_engine
 from corniceapp.models import initialize_sql
 
 
-db_name = "spacehub"
+db_name = "space"
 
 db_url = "sqlite:////tmp/test.db"
 
@@ -48,10 +48,7 @@ def main(global_config, **settings):
     config.set_authentication_policy(authn_policy)
     config.set_authorization_policy(authz_policy)
     config.add_static_view('/app', 'static', cache_max_age=3600)
-    config.add_view(lambda r: Response('We did not find your page. We did '
-                                       'find <a '
-                                       'href="http://supb.ro/ALIENS">ALIENS</a>',
-                                       status=404),
+    config.add_view(lambda r: HTTPMovedPermanently(location='/app/index.html'),
                     context='pyramid.httpexceptions.HTTPNotFound')
     config.include("cornice")
     config.scan("corniceapp.views")
