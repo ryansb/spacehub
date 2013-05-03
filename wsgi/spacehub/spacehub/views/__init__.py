@@ -17,20 +17,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from cornice import Service
-from corniceapp.models import User, Repo, DBSession
-from corniceapp.validators import validate_generic
-from pyramid.security import (
-    authenticated_userid,
-    remember,
-    forget,
-)
-from webob import Response
-import hashlib
-import json
-
-from corniceapp.views.sessions import *
-from corniceapp.views.users import *
-from corniceapp.views.repos import *
-from corniceapp.views.watch_link import *
-from corniceapp.views.watch_job import *
+from spacehub.views.sessions import *
+from spacehub.views.users import *
+from spacehub.views.repos import *
+from spacehub.views.watch_link import *
+from spacehub.views.watch_job import *

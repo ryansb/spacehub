@@ -3,7 +3,7 @@ import os.path
 import sh
 from datetime import datetime
 from sh import cp
-from corniceapp.models import DBSession, Repo, TrackedLink
+from spacehub.models import DBSession, Repo, TrackedLink
 from sqlalchemy import create_engine
 import logging
 

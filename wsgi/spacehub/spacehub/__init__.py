@@ -25,7 +25,7 @@ from pyramid.session import UnencryptedCookieSessionFactoryConfig
 
 import os
 from sqlalchemy import create_engine
-from corniceapp.models import initialize_sql
+from spacehub.models import initialize_sql
 
 
 db_name = "space"
@@ -51,7 +51,7 @@ def main(global_config, **settings):
     config.add_view(lambda r: HTTPMovedPermanently(location='/app/index.html'),
                     context='pyramid.httpexceptions.HTTPNotFound')
     config.include("cornice")
-    config.scan("corniceapp.views")
+    config.scan("spacehub.views")
     engine = create_engine(db_url)
     initialize_sql(engine)
 

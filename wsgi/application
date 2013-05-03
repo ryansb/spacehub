@@ -2,8 +2,8 @@
 import os, sys
 
 here = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(here, 'corniceapp'))
-config = os.path.join(here, 'corniceapp', 'production.ini')
+sys.path.insert(0, os.path.join(here, 'spacehub'))
+config = os.path.join(here, 'spacehub', 'production.ini')
 
 virtenv = os.environ.get('APPDIR', '~/') + '/virtenv/'
 os.environ['PYTHON_EGG_CACHE'] = os.path.join(virtenv, 'lib/python2.7/site-packages')

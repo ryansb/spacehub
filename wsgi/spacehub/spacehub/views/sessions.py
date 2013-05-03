@@ -18,9 +18,9 @@
 """
 
 from cornice import Service
-from corniceapp.models import User, DBSession, APIKey
-from corniceapp.validators import valid_user, valid_body
-from corniceapp.errors import _401
+from spacehub.models import User, DBSession, APIKey
+from spacehub.validators import valid_user, valid_body
+from spacehub.errors import _401
 from pyramid.security import (
     remember,
     forget,

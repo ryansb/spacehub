@@ -18,10 +18,10 @@
 """
 
 from cornice import Service
-from corniceapp.models import Repo, DBSession, TrackedLink
-from corniceapp.validators import valid_user, valid_body
-from corniceapp.errors import _401
-from corniceapp.bin import cron
+from spacehub.models import Repo, DBSession, TrackedLink
+from spacehub.validators import valid_user, valid_body
+from spacehub.errors import _401
+from spacehub.bin import cron
 
 repo = Service(name='repo', path='/repo', description="Service to deal with "
               "the addition/deletion of repositories")

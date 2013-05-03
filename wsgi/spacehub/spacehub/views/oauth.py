@@ -1,5 +1,5 @@
 from cornice import Service
-from corniceapp.models import DBSession, Secret
+from spacehub.models import DBSession, Secret
 from pyramid.httpexceptions import HTTPSeeOther, HTTPTemporaryRedirect
 import requests
 import logging

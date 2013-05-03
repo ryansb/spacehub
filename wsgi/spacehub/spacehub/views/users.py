@@ -18,9 +18,9 @@
 """
 
 from cornice import Service
-from corniceapp.models import User, DBSession
-from corniceapp.validators import valid_user, valid_body
-from corniceapp.errors import _401
+from spacehub.models import User, DBSession
+from spacehub.validators import valid_user, valid_body
+from spacehub.errors import _401
 import hashlib
 
 

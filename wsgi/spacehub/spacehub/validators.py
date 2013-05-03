@@ -18,8 +18,8 @@
 """
 
 import json
-from corniceapp.models import DBSession, User
-from corniceapp.errors import _401
+from spacehub.models import DBSession, User
+from spacehub.errors import _401
 from pyramid.security import authenticated_userid
 import logging
 

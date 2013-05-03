@@ -26,9 +26,9 @@ with open(os.path.join(here, 'README.rst')) as f:
     README = f.read()
 
 
-setup(name='corniceapp',
+setup(name='spacehub',
     version=0.1,
-    description='corniceapp',
+    description='spacehub',
     long_description=README,
     classifiers=[
         "Programming Language :: Python",
@@ -59,9 +59,9 @@ setup(name='corniceapp',
     ],
     entry_points = """\
     [paste.app_factory]
-    main = corniceapp:main
+    main = spacehub:main
     [console_scripts]
-    spacehub_cron = corniceapp.bin.cron:update_repos
+    spacehub_cron = spacehub.bin.cron:update_repos
     """,
     paster_plugins=['pyramid'],
 )

@@ -1,14 +1,11 @@
 """ Cornice services.
 """
 from cornice import Service
-from corniceapp.models import User, TrackedLink, DBSession
-from corniceapp.validators import validate_generic
+from spacehub.models import User, TrackedLink, DBSession
+from spacehub.validators import validate_generic
 from pyramid.security import (
     authenticated_userid,
 )
-from webob import Response
-import hashlib
-import json
 
 
 watch_page = Service(name="watch_page", path="/watch_page",
