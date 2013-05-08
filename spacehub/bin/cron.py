@@ -1,21 +1,26 @@
 import os
 import os.path
 import sh
-from datetime import datetime
-from sh import cp
-from spacehub.models import DBSession, Repo, TrackedLink
-from sqlalchemy import create_engine
 import logging
+import sys
+from sh import cp
+from datetime import datetime
+from spacehub.models import DBSession, Repo, TrackedLink
+from sqlalchemy import engine_from_config
+from paste.deploy import appconfig
 
 
 logger = logging.getLogger("spacehub.cron")
-db_name = "space"
+db_name = "spacehub"
 
-db_url = "sqlite:////tmp/test.db"
-
-
-if os.environ.get("OPENSHIFT_MYSQL_DB_URL", None):
-    db_url = os.environ.get("OPENSHIFT_MYSQL_DB_URL") + db_name
+def _getpathsec(config_uri, name):
+    if '#' in config_uri:
+        path, section = config_uri.split('#', 1)
+    else:
+        path, section = config_uri, 'main'
+    if name:
+        section = name
+    return path, section
 
 
 def sync_tarballs(DBSession):
@@ -38,6 +43,7 @@ def sync_tarballs(DBSession):
         DBSession.commit()
         logger.info("Synced {0} -> {1}".format(link.name, repo.name))
 
+
 def sync_svn(DBSession):
     print("Syncing svn repos")
     repos = DBSession.query(Repo).filter(Repo.source_type=='svn')
@@ -50,8 +56,20 @@ def sync_svn(DBSession):
         pass
 
 
+def usage():
+    print('usage: spacehub-cron <config_uri>')
+    sys.exit(1)
+
+
 def update_repos():
-    engine = create_engine(db_url)
+    if len(sys.argv) != 2:
+        usage()
+    config_uri = sys.argv[1]
+    path, section = _getpathsec(config_uri, "pyramid")
+    config_name = 'config:{0}'.format(path)
+    here = os.getcwd()
+    settings = appconfig(config_name, name=section, relative_to=here)
+    engine = engine_from_config(settings, 'sqlalchemy.')
     DBSession.configure(bind=engine)
     sync_tarballs(DBSession)
 
