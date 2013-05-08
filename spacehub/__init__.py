@@ -23,17 +23,11 @@ from pyramid.authorization import ACLAuthorizationPolicy
 from pyramid.authentication import AuthTktAuthenticationPolicy
 from pyramid.session import UnencryptedCookieSessionFactoryConfig
 
-import os
-from sqlalchemy import create_engine
+from sqlalchemy import engine_from_config
 from spacehub.models import initialize_sql
 
 
-db_name = "space"
-
-db_url = "sqlite:////tmp/test.db"
-
-if os.environ.get("OPENSHIFT_MYSQL_DB_URL", None):
-    db_url = os.environ.get("OPENSHIFT_MYSQL_DB_URL") + db_name
+db_name = "spacehub"
 
 
 def main(global_config, **settings):
@@ -52,7 +46,7 @@ def main(global_config, **settings):
                     context='pyramid.httpexceptions.HTTPNotFound')
     config.include("cornice")
     config.scan("spacehub.views")
-    engine = create_engine(db_url)
+    engine = engine_from_config(settings, 'sqlalchemy.')
     initialize_sql(engine)
 
     return config.make_wsgi_app()
