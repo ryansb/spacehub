@@ -28,12 +28,12 @@ from sqlalchemy import create_engine
 from spacehub.models import initialize_sql
 
 
-db_name = "space"
+db_name = "spacehub"
 
 db_url = "sqlite:////tmp/test.db"
 
 if os.environ.get("OPENSHIFT_MYSQL_DB_URL", None):
-    db_url = os.environ.get("OPENSHIFT_MYSQL_DB_URL") + db_name
+    db_url = os.environ.get("OPENSHIFT_MYSQL_DB_URL")
 
 
 def main(global_config, **settings):
