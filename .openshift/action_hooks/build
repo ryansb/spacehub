@@ -5,7 +5,7 @@ export PYTHON=python-2.7
 export PATH=$PATH:~/$PYTHON/virtenv/bin/
 export PYTHON_EGG_CACHE=~/$PYTHON/virtenv/lib/python2.7/site-packages
 
-APP=corniceapp
+APP=spacehub
 
 source ~/$PYTHON/virtenv/bin/activate
 
