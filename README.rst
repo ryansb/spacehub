@@ -32,3 +32,5 @@ That's all it takes. You can now view your application at:
     http://APPNAME-DOMAIN.rhcloud.com
 
 And you're off to the races!
+
+NOTE: To properly connect to the DB, you should name your app "spacehub" since we assume that name exists when connecting.
